@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_place/model/usuario_model.dart';
 
+import 'home_page.dart';
 import 'sign_up_page.dart';
 
 class SignInPage extends StatefulWidget {
@@ -14,6 +17,7 @@ class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
 
   final _firebaseAuth = FirebaseAuth.instance;
+  final _usersRef = FirebaseFirestore.instance.collection('users');
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +59,19 @@ class _SignInPageState extends State<SignInPage> {
                   final form = _formKey.currentState;
                   if (form.validate()) {
                     form.save();
-                    final user = await _firebaseAuth.signInWithEmailAndPassword(
+                    final userFireAuth =
+                        await _firebaseAuth.signInWithEmailAndPassword(
                       email: _email,
                       password: _senha,
                     );
-                    print(user);
+                    final userFirestore =
+                        await _usersRef.doc(userFireAuth.user.uid).get();
+                    final user = UsuarioModel.fromJson(userFirestore.data());
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => HomePage(user),
+                      ),
+                    );
                   }
                 },
                 child: Text('Login'),
@@ -67,7 +79,9 @@ class _SignInPageState extends State<SignInPage> {
               SizedBox(height: 12),
               RaisedButton(
                 onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => SignUpPage(),),
+                  MaterialPageRoute(
+                    builder: (_) => SignUpPage(),
+                  ),
                 ),
                 child: Text('Cadastrar'),
               ),
