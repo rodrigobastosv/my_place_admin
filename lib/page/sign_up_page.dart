@@ -16,7 +16,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
 
   final _firebaseAuth = FirebaseAuth.instance;
-  final _userRef = FirebaseFirestore.instance.collection('users');
+  final _userRef = FirebaseFirestore.instance.collection('usuarios');
 
   @override
   Widget build(BuildContext context) {
