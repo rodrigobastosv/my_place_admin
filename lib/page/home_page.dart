@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_place/model/usuario_model.dart';
-import 'package:my_place/page/categoria/list_categoria_page.dart';
+import 'package:my_place/page/categoria/lista_categorias_page.dart';
 import 'package:my_place/page/produto/lista_produtos_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -27,14 +27,14 @@ class HomePage extends StatelessWidget {
               child: Container(
                 height: 100,
                 width: 100,
-                child: Text('Criar Produto'),
+                child: Text('Produtos'),
               ),
             ),
             GestureDetector(
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => ListCategoriaPage(),
+                    builder: (_) => ListaCategoriasPage(),
                   ),
                 );
               },

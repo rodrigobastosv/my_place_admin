@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:my_place/model/categoria_model.dart';
 import 'package:my_place/page/categoria/form_categoria_page.dart';
 
-class ListCategoriaPage extends StatefulWidget {
+class ListaCategoriasPage extends StatefulWidget {
   @override
-  _ListCategoriaPageState createState() => _ListCategoriaPageState();
+  _ListaCategoriasPageState createState() => _ListaCategoriasPageState();
 }
 
-class _ListCategoriaPageState extends State<ListCategoriaPage> {
+class _ListaCategoriasPageState extends State<ListaCategoriasPage> {
   final Stream<QuerySnapshot> categoriasStream =
       FirebaseFirestore.instance.collection('categorias').snapshots();
 
