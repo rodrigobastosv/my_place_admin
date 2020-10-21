@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:my_place/model/produto_model.dart';
+import 'package:select_form_field/select_form_field.dart';
 
 class FormProdutoPage extends StatefulWidget {
   FormProdutoPage(this.produto);
@@ -16,13 +17,16 @@ class FormProdutoPage extends StatefulWidget {
 class _FormProdutoPageState extends State<FormProdutoPage> {
   ProdutoModel _produto;
   List<Asset> images = List<Asset>();
+  Future<QuerySnapshot> _categoriasFuture;
   final _formKey = GlobalKey<FormState>();
 
+  final _categoriasRef = FirebaseFirestore.instance.collection('categorias');
   final _produtosRef = FirebaseFirestore.instance.collection('produtos');
   final _firebaseStorage = FirebaseStorage.instance.ref();
 
   @override
   void initState() {
+    _categoriasFuture = _categoriasRef.get();
     _produto = widget.produto ?? ProdutoModel();
     super.initState();
   }
@@ -70,64 +74,90 @@ class _FormProdutoPageState extends State<FormProdutoPage> {
         title: Text('Categoria'),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(22),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                initialValue: _produto.nome,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  hintText: 'Nome',
-                ),
-                validator: (nome) => nome.isEmpty ? 'Campo Obrigatório' : null,
-                onSaved: (nome) => _produto.nome = nome,
-              ),
-              SizedBox(height: 12),
-              TextFormField(
-                initialValue: _produto.descricao,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  hintText: 'Descrição',
-                ),
-                validator: (descricao) =>
-                    descricao.isEmpty ? 'Campo Obrigatório' : null,
-                onSaved: (descricao) => _produto.descricao = descricao,
-              ),
-              SizedBox(height: 12),
-              RaisedButton(
-                onPressed: () async {
-                  images = await MultiImagePicker.pickImages(
-                    enableCamera: true,
-                    maxImages: 8,
-                    materialOptions: MaterialOptions(
-                      actionBarTitle: "Action bar",
-                      allViewTitle: "All view title",
-                      actionBarColor: "#aaaaaa",
-                      actionBarTitleColor: "#bbbbbb",
-                      lightStatusBar: false,
-                      statusBarColor: '#abcdef',
-                      startInAllView: true,
-                      selectCircleStrokeColor: "#000000",
-                      selectionLimitReachedText: "You can't select any more.",
+      body: FutureBuilder<QuerySnapshot>(
+        future: _categoriasFuture,
+        builder: (_, snapshot) {
+          if (snapshot.hasData) {
+            final data = snapshot.data;
+            final categorias = data.docs.map((doc) => doc.data()['nome']);
+            return Padding(
+              padding: const EdgeInsets.all(22),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    SelectFormField(
+                      initialValue: '',
+                      icon: Icon(Icons.format_shapes),
+                      labelText: 'Categoria',
+                      items: categorias.map((categoria) => {
+                        'value': categoria,
+                        'label': categoria,
+                      }).toList(),
+                      validator: (categoria) => categoria.isEmpty ? 'Campo Obrigatório' : null,
+                      onSaved: (categoria) => _produto.categoria = categoria,
                     ),
-                  );
-                  setState(() {});
-                },
-                child: Text('Escolher imagens'),
+                    SizedBox(height: 12),
+                    TextFormField(
+                      initialValue: _produto.nome,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        hintText: 'Nome',
+                      ),
+                      validator: (nome) =>
+                          nome.isEmpty ? 'Campo Obrigatório' : null,
+                      onSaved: (nome) => _produto.nome = nome,
+                    ),
+                    SizedBox(height: 12),
+                    TextFormField(
+                      initialValue: _produto.descricao,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        hintText: 'Descrição',
+                      ),
+                      validator: (descricao) =>
+                          descricao.isEmpty ? 'Campo Obrigatório' : null,
+                      onSaved: (descricao) => _produto.descricao = descricao,
+                    ),
+                    SizedBox(height: 12),
+                    RaisedButton(
+                      onPressed: () async {
+                        images = await MultiImagePicker.pickImages(
+                          enableCamera: true,
+                          maxImages: 8,
+                          materialOptions: MaterialOptions(
+                            actionBarTitle: "Action bar",
+                            allViewTitle: "All view title",
+                            actionBarColor: "#aaaaaa",
+                            actionBarTitleColor: "#bbbbbb",
+                            lightStatusBar: false,
+                            statusBarColor: '#abcdef',
+                            startInAllView: true,
+                            selectCircleStrokeColor: "#000000",
+                            selectionLimitReachedText:
+                                "You can't select any more.",
+                          ),
+                        );
+                        setState(() {});
+                      },
+                      child: Text('Escolher imagens'),
+                    ),
+                    Expanded(
+                      child: buildGridView(),
+                    ),
+                  ],
+                ),
               ),
-              Expanded(
-                child: buildGridView(),
-              ),
-            ],
-          ),
-        ),
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
