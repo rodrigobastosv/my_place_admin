@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_place/model/usuario_model.dart';
 import 'package:my_place/page/categoria/list_categoria_page.dart';
+import 'package:my_place/page/produto/lista_produtos_page.dart';
 
 class HomePage extends StatelessWidget {
   HomePage(this.usuario);
@@ -15,10 +16,19 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              height: 100,
-              width: 100,
-              child: Text('Criar Produto'),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => ListaProdutosPage(),
+                  ),
+                );
+              },
+              child: Container(
+                height: 100,
+                width: 100,
+                child: Text('Criar Produto'),
+              ),
             ),
             GestureDetector(
               onTap: () {

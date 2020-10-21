@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:my_place/model/categoria_model.dart';
 
 class FormCategoriaPage extends StatefulWidget {
@@ -17,8 +15,7 @@ class FormCategoriaPage extends StatefulWidget {
 
 class _FormCategoriaPageState extends State<FormCategoriaPage> {
   CategoriaModel _categoria;
-  File _image;
-  final picker = ImagePicker();
+  List<int> _imageData;
   final _formKey = GlobalKey<FormState>();
 
   final _categoriasRef = FirebaseFirestore.instance.collection('categorias');
@@ -30,14 +27,18 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
     super.initState();
   }
 
-  Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+  Future<void> getImage() async {
+    final file = await MultiImagePicker.pickImages(
+      enableCamera: true,
+      maxImages: 1,
+    );
+    if (file != null) {
+      final image = await file[0].getByteData();
 
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      }
-    });
+      setState(() {
+        _imageData = image.buffer.asUint8List();
+      });
+    }
   }
 
   @override
@@ -85,9 +86,9 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
                     : Container(
                         height: 200,
                         width: 200,
-                        child: _image == null
+                        child: _imageData == null
                             ? Text('Escolha a imagem')
-                            : Image.file(_image),
+                            : Image.memory(_imageData),
                       ),
               ),
             ],
@@ -103,11 +104,11 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
               await _categoriasRef
                   .doc(_categoria.id)
                   .update(_categoria.toJson());
-              if (_image != null) {
+              if (_imageData != null) {
                 final uploadTask = _firebaseStorage
                     .child('categorias')
                     .child(_categoria.id)
-                    .putFile(_image);
+                    .putData(_imageData);
                 final onCompleteTask = await uploadTask.onComplete;
                 final categoriaUrl = await onCompleteTask.ref.getDownloadURL();
                 await _categoriasRef.doc(_categoria.id).update({
@@ -116,12 +117,12 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
               }
             } else {
               final categoria = await _categoriasRef.add(_categoria.toJson());
-              if (_image != null) {
+              if (_imageData != null) {
                 final categoriaId = categoria.id;
                 final uploadTask = _firebaseStorage
                     .child('categorias')
                     .child(categoriaId)
-                    .putFile(_image);
+                    .putData(_imageData);
                 final onCompleteTask = await uploadTask.onComplete;
                 final categoriaUrl = await onCompleteTask.ref.getDownloadURL();
                 await _categoriasRef.doc(categoriaId).update({
