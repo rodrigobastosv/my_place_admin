@@ -21,86 +21,114 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(28),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Logo(),
-              TextFormField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+      body: Container(
+        padding: const EdgeInsets.all(32),
+        alignment: Alignment.center,
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Container(
+              width: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Logo(),
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Nome',
+                      prefixIcon: Icon(
+                        Icons.person,
+                        size: 24,
+                      ),
+                    ),
+                    validator: (nome) =>
+                        nome.isEmpty ? 'Campo Obrigatório' : null,
+                    onSaved: (nome) => _nome = nome,
                   ),
-                  hintText: 'Nome',
-                ),
-                validator: (nome) => nome.isEmpty ? 'Campo Obrigatório' : null,
-                onSaved: (nome) => _nome = nome,
-              ),
-              SizedBox(height: 12),
-              TextFormField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'E-mail',
+                      prefixIcon: Icon(
+                        Icons.mail,
+                        size: 24,
+                      ),
+                    ),
+                    validator: (email) =>
+                        email.isEmpty ? 'Campo Obrigatório' : null,
+                    onSaved: (email) => _email = email,
                   ),
-                  hintText: 'E-mail',
-                ),
-                validator: (email) =>
-                    email.isEmpty ? 'Campo Obrigatório' : null,
-                onSaved: (email) => _email = email,
-              ),
-              SizedBox(height: 12),
-              TextFormField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Senha',
+                      prefixIcon: Icon(
+                        Icons.lock,
+                        size: 24,
+                      ),
+                    ),
+                    obscureText: true,
+                    validator: (senha) =>
+                        senha.isEmpty ? 'Campo Obrigatório' : null,
+                    onSaved: (senha) => _senha = senha,
                   ),
-                  hintText: 'Senha',
-                ),
-                obscureText: true,
-                validator: (senha) =>
-                    senha.isEmpty ? 'Campo Obrigatório' : null,
-                onSaved: (senha) => _senha = senha,
-              ),
-              SizedBox(height: 12),
-              TextFormField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Repita a senha',
+                      prefixIcon: Icon(
+                        Icons.lock,
+                        size: 24,
+                      ),
+                    ),
+                    obscureText: true,
+                    validator: (passwordConfirm) =>
+                        passwordConfirm.isEmpty ? 'Campo Obrigatório' : null,
                   ),
-                  hintText: 'Confirmar Senha',
-                ),
-                obscureText: true,
-                validator: (passwordConfirm) =>
-                    passwordConfirm.isEmpty ? 'Campo Obrigatório' : null,
+                  SizedBox(height: 16),
+                  Container(
+                    width: 120,
+                    child: RaisedButton(
+                      onPressed: () async {
+                        final form = _formKey.currentState;
+                        if (form.validate()) {
+                          form.save();
+                          final userCredential = await _firebaseAuth
+                              .createUserWithEmailAndPassword(
+                            email: _email,
+                            password: _senha,
+                          );
+                          await _userRef.doc(userCredential.user.uid).set({
+                            'nome': _nome,
+                            'email': _email,
+                          });
+                        }
+                      },
+                      child: Text(
+                        'Confirmar',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 120,
+                    child: OutlineButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'Voltar',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 12),
-              RaisedButton(
-                onPressed: () async {
-                  final form = _formKey.currentState;
-                  if (form.validate()) {
-                    form.save();
-                    final userCredential =
-                        await _firebaseAuth.createUserWithEmailAndPassword(
-                      email: _email,
-                      password: _senha,
-                    );
-                    await _userRef.doc(userCredential.user.uid).set({
-                      'nome': _nome,
-                      'email': _email,
-                    });
-                  }
-                },
-                child: Text('Cadastrar Usuário'),
-              ),
-              SizedBox(height: 12),
-              RaisedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('Voltar'),
-              ),
-            ],
+            ),
           ),
         ),
       ),

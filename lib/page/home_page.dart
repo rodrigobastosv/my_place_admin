@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_place/model/usuario_model.dart';
-import 'package:my_place/page/categoria/lista_categorias_page.dart';
-import 'package:my_place/page/produto/lista_produtos_page.dart';
+
+import '../model/usuario_model.dart';
+import 'categoria/lista_categorias_page.dart';
+import 'produto/lista_produtos_page.dart';
 
 class HomePage extends StatelessWidget {
   HomePage(this.usuario);
@@ -12,7 +13,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

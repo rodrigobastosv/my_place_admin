@@ -10,6 +10,7 @@ final lightTheme = ThemeData(
   scaffoldBackgroundColor: Colors.grey[50],
   textSelectionColor: Colors.deepOrange[300],
   textSelectionHandleColor: Colors.deepOrange[600],
+  visualDensity: VisualDensity.comfortable,
   buttonTheme: ButtonThemeData(
     buttonColor: Colors.deepOrange,
     shape: RoundedRectangleBorder(
@@ -31,7 +32,6 @@ final lightTheme = ThemeData(
   inputDecorationTheme: InputDecorationTheme(
     labelStyle: const TextStyle(color: Colors.black),
     isDense: true,
-    filled: true,
     border: OutlineInputBorder(
       gapPadding: 2,
       borderSide: BorderSide(
@@ -54,7 +54,7 @@ final lightTheme = ThemeData(
       borderRadius: BorderRadius.circular(10),
     ),
     focusedBorder: OutlineInputBorder(
-      gapPadding: 2,
+      gapPadding: 4,
       borderSide: const BorderSide(
         width: 2,
         color: Colors.black,
