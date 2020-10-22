@@ -87,7 +87,7 @@ class _FormProdutoPageState extends State<FormProdutoPage> {
                 child: Column(
                   children: [
                     SelectFormField(
-                      initialValue: '',
+                      initialValue: _produto.categoria,
                       icon: Icon(Icons.format_shapes),
                       labelText: 'Categoria',
                       items: categorias.map((categoria) => {

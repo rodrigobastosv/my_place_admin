@@ -15,6 +15,7 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   String _email = "";
   String _senha = "";
+  bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
 
   final _firebaseAuth = FirebaseAuth.instance;
@@ -26,7 +27,9 @@ class _SignInPageState extends State<SignInPage> {
       body: Container(
         padding: const EdgeInsets.all(32),
         alignment: Alignment.center,
-        child: SingleChildScrollView(
+        child: isLoading ? Center(
+          child: CircularProgressIndicator(),
+        ) : SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Container(
@@ -69,21 +72,44 @@ class _SignInPageState extends State<SignInPage> {
                       onPressed: () async {
                         final form = _formKey.currentState;
                         if (form.validate()) {
+                          setState(() {
+                            isLoading = true;
+                          });
                           form.save();
-                          final userFireAuth =
-                              await _firebaseAuth.signInWithEmailAndPassword(
-                            email: _email,
-                            password: _senha,
-                          );
-                          final userFirestore =
-                              await _usersRef.doc(userFireAuth.user.uid).get();
-                          final user =
-                              UsuarioModel.fromJson(userFirestore.data());
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => HomePage(user),
-                            ),
-                          );
+                          try {
+                            final userFireAuth =
+                                await _firebaseAuth.signInWithEmailAndPassword(
+                              email: _email,
+                              password: _senha,
+                            );
+                            final userFirestore = await _usersRef
+                                .doc(userFireAuth.user.uid)
+                                .get();
+                            final user =
+                                UsuarioModel.fromJson(userFirestore.data());
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => HomePage(user),
+                              ),
+                            );
+                          } on Exception catch (e) {
+                            if (e is FirebaseAuthException) {
+                              print(e.code);
+                              if (e.code == 'user-not-found') {
+                                print('Usuário não encontrado!');
+                              } else if (e.code == 'wrong-password') {
+                                print('Password inválido!');
+                              } else if (e.code == 'invalid-email') {
+                                print('Email inválido!');
+                              }
+                            } else {
+                              print('Erro ao autenticar usuário');
+                              form.reset();
+                            }
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
                         }
                       },
                       child: Text(
