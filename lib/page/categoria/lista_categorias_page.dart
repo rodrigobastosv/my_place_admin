@@ -16,6 +16,7 @@ class _ListaCategoriasPageState extends State<ListaCategoriasPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text('Lista de Categorias'),
         centerTitle: true,
       ),
@@ -69,7 +70,10 @@ class _ListaCategoriasPageState extends State<ListaCategoriasPage> {
             ),
           );
         },
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }

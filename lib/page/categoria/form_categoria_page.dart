@@ -15,7 +15,6 @@ class FormCategoriaPage extends StatefulWidget {
 
 class _FormCategoriaPageState extends State<FormCategoriaPage> {
   CategoriaModel _categoria;
-  List<int> _imageData;
   final _formKey = GlobalKey<FormState>();
 
   final _categoriasRef = FirebaseFirestore.instance.collection('categorias');
@@ -34,9 +33,16 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
     );
     if (file != null) {
       final image = await file[0].getByteData();
-
+      final imageData = image.buffer.asUint8List();
+      await _firebaseStorage.child('categorias').child(_categoria.id).delete();
+      final uploadTask = _firebaseStorage
+          .child('categorias')
+          .child(_categoria.id)
+          .putData(imageData);
+      final onCompleteTask = await uploadTask.onComplete;
+      final categoriaUrl = await onCompleteTask.ref.getDownloadURL();
       setState(() {
-        _imageData = image.buffer.asUint8List();
+        _categoria.urlImagem = categoriaUrl;
       });
     }
   }
@@ -44,54 +50,72 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Categoria'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(22),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                initialValue: _categoria.nome,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  hintText: 'Nome',
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 140,
+              floating: false,
+              pinned: true,
+              backgroundColor: Theme.of(context).primaryColor,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.camera),
+                  onPressed: () async => getImage(),
                 ),
-                validator: (nome) => nome.isEmpty ? 'Campo Obrigatório' : null,
-                onSaved: (nome) => _categoria.nome = nome,
-              ),
-              SizedBox(height: 12),
-              TextFormField(
-                initialValue: _categoria.descricao,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: Text(
+                  _categoria.nome,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
                   ),
-                  hintText: 'Descrição',
                 ),
-                validator: (descricao) =>
-                    descricao.isEmpty ? 'Campo Obrigatório' : null,
-                onSaved: (descricao) => _categoria.descricao = descricao,
+                background: Image.network(
+                  _categoria.urlImagem,
+                  fit: BoxFit.cover,
+                ),
               ),
-              SizedBox(height: 12),
-              GestureDetector(
-                onTap: () async => getImage(),
-                child: _categoria.urlImagem != null
-                    ? Image.network(_categoria.urlImagem)
-                    : Container(
-                        height: 200,
-                        width: 200,
-                        child: _imageData == null
-                            ? Text('Escolha a imagem')
-                            : Image.memory(_imageData),
-                      ),
-              ),
-            ],
+            ),
+          ];
+        },
+        body: Padding(
+          padding: const EdgeInsets.all(22),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  initialValue: _categoria.nome,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    labelText: 'Nome',
+                    hintText: 'Nome',
+                  ),
+                  validator: (nome) =>
+                      nome.isEmpty ? 'Campo Obrigatório' : null,
+                  onSaved: (nome) => _categoria.nome = nome,
+                ),
+                SizedBox(height: 12),
+                TextFormField(
+                  initialValue: _categoria.descricao,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    labelText: 'Descrição',
+                    hintText: 'Descrição',
+                  ),
+                  validator: (descricao) =>
+                      descricao.isEmpty ? 'Campo Obrigatório' : null,
+                  onSaved: (descricao) => _categoria.descricao = descricao,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -104,35 +128,11 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
               await _categoriasRef
                   .doc(_categoria.id)
                   .update(_categoria.toJson());
-              if (_imageData != null) {
-                final uploadTask = _firebaseStorage
-                    .child('categorias')
-                    .child(_categoria.id)
-                    .putData(_imageData);
-                final onCompleteTask = await uploadTask.onComplete;
-                final categoriaUrl = await onCompleteTask.ref.getDownloadURL();
-                await _categoriasRef.doc(_categoria.id).update({
-                  'urlImagem': categoriaUrl,
-                });
-              }
-            } else {
-              final categoria = await _categoriasRef.add(_categoria.toJson());
-              if (_imageData != null) {
-                final categoriaId = categoria.id;
-                final uploadTask = _firebaseStorage
-                    .child('categorias')
-                    .child(categoriaId)
-                    .putData(_imageData);
-                final onCompleteTask = await uploadTask.onComplete;
-                final categoriaUrl = await onCompleteTask.ref.getDownloadURL();
-                await _categoriasRef.doc(categoriaId).update({
-                  'urlImagem': categoriaUrl,
-                });
-              }
             }
-
-            Navigator.of(context).pop();
+          } else {
+            await _categoriasRef.add(_categoria.toJson());
           }
+          Navigator.of(context).pop();
         },
         child: Icon(Icons.check),
       ),
