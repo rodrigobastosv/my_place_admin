@@ -52,9 +52,12 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
                     fontSize: 16.0,
                   ),
                 ),
-                background: _controller.categoria.urlImagem == null ? SizedBox() : Image.network(
+                background: Hero(
+                  tag: widget.categoria.id ?? '',
+                  child: _controller.categoria.urlImagem == null ? SizedBox() : Image.network(
                   _controller.categoria.urlImagem,
                   fit: BoxFit.cover,
+                ),
                 ),
               ),
             ),

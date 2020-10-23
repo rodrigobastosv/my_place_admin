@@ -31,13 +31,16 @@ class ListaCategoriasPage extends StatelessWidget {
                       ),
                     );
                   },
-                  leading: categorias[i].urlImagem != null
+                  leading: Hero(
+                    tag: categorias[i].id,
+                    child: categorias[i].urlImagem != null
                       ? CircleAvatar(
                           backgroundImage: NetworkImage(
                             categorias[i].urlImagem,
                           ),
                         )
                       : Icon(Icons.category),
+                  ),
                   title: Text(categorias[i].nome),
                 );
               },
