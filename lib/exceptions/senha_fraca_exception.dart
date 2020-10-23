@@ -1,0 +1,1 @@
+class SenhaFracaException implements Exception {}

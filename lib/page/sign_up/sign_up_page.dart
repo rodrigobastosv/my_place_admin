@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_place/exceptions/exceptions.dart';
+import 'package:my_place/page/sign_up/sign_up_controller.dart';
 
-import '../widget/logo.dart';
+import '../../widget/logo.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -10,14 +10,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  String _nome = "";
-  String _email = "";
-  String _senha = "";
-  bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
-
-  final _firebaseAuth = FirebaseAuth.instance;
-  final _userRef = FirebaseFirestore.instance.collection('usuarios');
+  final _controller = SignUpController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
       body: Container(
         padding: const EdgeInsets.all(32),
         alignment: Alignment.center,
-        child: isLoading
+        child: _controller.isLoading
             ? Center(
                 child: CircularProgressIndicator(),
               )
@@ -49,7 +43,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           validator: (nome) =>
                               nome.isEmpty ? 'Campo Obrigatório' : null,
-                          onSaved: (nome) => _nome = nome,
+                          onSaved: _controller.setNome,
                         ),
                         SizedBox(height: 16),
                         TextFormField(
@@ -62,7 +56,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           validator: (email) =>
                               email.isEmpty ? 'Campo Obrigatório' : null,
-                          onSaved: (email) => _email = email,
+                          onSaved: _controller.setEmail,
                         ),
                         SizedBox(height: 16),
                         TextFormField(
@@ -76,7 +70,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           obscureText: true,
                           validator: (senha) =>
                               senha.isEmpty ? 'Campo Obrigatório' : null,
-                          onSaved: (senha) => _senha = senha,
+                          onSaved: _controller.setSenha,
+                          onChanged: _controller.setSenha,
                         ),
                         SizedBox(height: 16),
                         TextFormField(
@@ -88,10 +83,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
                           obscureText: true,
-                          validator: (passwordConfirm) =>
-                              passwordConfirm.isEmpty
-                                  ? 'Campo Obrigatório'
-                                  : null,
+                          validator: _controller.validaConfirmacaoSenha,
                         ),
                         SizedBox(height: 16),
                         Container(
@@ -102,34 +94,14 @@ class _SignUpPageState extends State<SignUpPage> {
                               if (form.validate()) {
                                 try {
                                   setState(() {
-                                    isLoading = true;
+                                    _controller.setIsLoading(true);
                                   });
                                   form.save();
-                                  final userCredential = await _firebaseAuth
-                                      .createUserWithEmailAndPassword(
-                                    email: _email,
-                                    password: _senha,
-                                  );
-                                  await _userRef
-                                      .doc(userCredential.user.uid)
-                                      .set({
-                                    'nome': _nome,
-                                    'email': _email,
-                                  });
+                                  await _controller.criaUsuario();
                                   Navigator.of(context).pop();
-                                } on Exception catch (e) {
-                                  if (e is FirebaseAuthException) {
-                                    if (e.code == 'email-already-in-use') {
-                                      print('Email indisponivel!');
-                                    } else if (e.code == 'weak-password') {
-                                      print('Senha muito fraca!');
-                                    }
-                                  } else {
-                                    print('Erro ao criar usuário');
-                                    form.reset();
-                                  }
+                                } on EmailIndisponivelException {} on SenhaFracaException {} on Exception {} finally {
                                   setState(() {
-                                    isLoading = false;
+                                    _controller.setIsLoading(false);
                                   });
                                 }
                               }

@@ -1,16 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:my_place/model/categoria_model.dart';
 import 'package:my_place/page/categoria/form_categoria_page.dart';
 
-class ListaCategoriasPage extends StatefulWidget {
-  @override
-  _ListaCategoriasPageState createState() => _ListaCategoriasPageState();
-}
+import 'lista_categoria_controller.dart';
 
-class _ListaCategoriasPageState extends State<ListaCategoriasPage> {
-  final Stream<QuerySnapshot> categoriasStream =
-      FirebaseFirestore.instance.collection('categorias').snapshots();
+class ListaCategoriasPage extends StatelessWidget {
+  final _controller = ListaCategoriaController();
 
   @override
   Widget build(BuildContext context) {
@@ -21,17 +16,11 @@ class _ListaCategoriasPageState extends State<ListaCategoriasPage> {
         centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: categoriasStream,
+        stream: _controller.getCategoriasStream(),
         builder: (_, snapshot) {
           if (snapshot.hasData) {
-            final docs = snapshot.data.docs;
-            final categorias = List.generate(docs.length, (i) {
-              final categoriaDoc = docs[i];
-              return CategoriaModel.fromJson(
-                categoriaDoc.id,
-                categoriaDoc.data(),
-              );
-            });
+            final categorias =
+                _controller.getCategoriasFromDocs(snapshot.data.docs);
             return ListView.builder(
               itemBuilder: (_, i) {
                 return ListTile(
@@ -55,7 +44,6 @@ class _ListaCategoriasPageState extends State<ListaCategoriasPage> {
               itemCount: categorias.length,
             );
           } else if (snapshot.hasError) {
-            print(snapshot.error);
             return Text('Erro');
           } else {
             return CircularProgressIndicator();

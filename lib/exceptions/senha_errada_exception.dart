@@ -1,0 +1,1 @@
+class SenhaErradaException implements Exception {}

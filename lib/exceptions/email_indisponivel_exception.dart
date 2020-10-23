@@ -1,0 +1,1 @@
+class EmailIndisponivelException implements Exception {}

@@ -55,7 +55,6 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
               itemCount: produtos.length,
             );
           } else if (snapshot.hasError) {
-            print(snapshot.error);
             return Text('Erro');
           } else {
             return CircularProgressIndicator();

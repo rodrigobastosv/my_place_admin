@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../model/usuario_model.dart';
-import 'categoria/lista_categorias_page.dart';
-import 'produto/lista_produtos_page.dart';
+import '../../model/usuario_model.dart';
+import '../categoria/lista_categorias_page.dart';
+import '../produto/lista_produtos_page.dart';
 
 class HomePage extends StatelessWidget {
   HomePage(this.usuario);
