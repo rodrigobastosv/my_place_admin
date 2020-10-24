@@ -16,7 +16,7 @@ class ListaCategoriasPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: _controller.getCategoriasStream(),
+        stream: _controller.categoriasStream(),
         builder: (_, snapshot) {
           if (snapshot.hasData) {
             final categorias =

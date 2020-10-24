@@ -28,7 +28,8 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              expandedHeight: _controller.categoria.urlImagem == null ? 60 : 140,
+              expandedHeight:
+                  _controller.categoria.urlImagem == null ? 60 : 140,
               floating: false,
               pinned: true,
               backgroundColor: Theme.of(context).primaryColor,
@@ -54,10 +55,12 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
                 ),
                 background: Hero(
                   tag: widget.categoria.id ?? '',
-                  child: _controller.categoria.urlImagem == null ? SizedBox() : Image.network(
-                  _controller.categoria.urlImagem,
-                  fit: BoxFit.cover,
-                ),
+                  child: _controller.categoria.urlImagem == null
+                      ? SizedBox()
+                      : Image.network(
+                          _controller.categoria.urlImagem,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ),

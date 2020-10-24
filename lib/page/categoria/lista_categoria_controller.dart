@@ -5,7 +5,7 @@ class ListaCategoriaController {
   final Stream<QuerySnapshot> _categoriasStream =
       FirebaseFirestore.instance.collection('categorias').snapshots();
 
-  Stream<QuerySnapshot> getCategoriasStream() => _categoriasStream;
+  Stream<QuerySnapshot> categoriasStream() => _categoriasStream;
 
   List<CategoriaModel> getCategoriasFromDocs(List<QueryDocumentSnapshot> docs) {
     return List.generate(docs.length, (i) {

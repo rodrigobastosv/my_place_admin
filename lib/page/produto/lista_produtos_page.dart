@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:my_place/model/produto_model.dart';
 import 'package:my_place/page/produto/form_produto_page.dart';
+import 'package:my_place/page/produto/lista_produto_controller.dart';
 
 class ListaProdutosPage extends StatefulWidget {
   @override
@@ -9,8 +9,7 @@ class ListaProdutosPage extends StatefulWidget {
 }
 
 class _ListaProdutosPageState extends State<ListaProdutosPage> {
-  final Stream<QuerySnapshot> produtosStream =
-      FirebaseFirestore.instance.collection('produtos').snapshots();
+  final _controller = ListaProdutoController();
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +19,11 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
         centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: produtosStream,
+        stream: _controller.produtosStream,
         builder: (_, snapshot) {
           if (snapshot.hasData) {
             final docs = snapshot.data.docs;
-            final produtos = List.generate(docs.length, (i) {
-              final produtoDoc = docs[i];
-              return ProdutoModel.fromJson(
-                produtoDoc.id,
-                produtoDoc.data(),
-              );
-            });
+            final produtos = _controller.getProdutosFromData(docs);
             return ListView.builder(
               itemBuilder: (_, i) {
                 final produto = produtos[i];
@@ -54,8 +47,6 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
               },
               itemCount: produtos.length,
             );
-          } else if (snapshot.hasError) {
-            return Text('Erro');
           } else {
             return CircularProgressIndicator();
           }
