@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_place/exceptions/exceptions.dart';
 
-import '../../widget/logo.dart';
+import '../../widget/mp_logo.dart';
 import '../home/home_page.dart';
 import '../sign_up/sign_up_page.dart';
 import 'sign_in_controller.dart';
@@ -33,11 +33,11 @@ class _SignInPageState extends State<SignInPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Logo(),
+                        MPLogo(),
                         const SizedBox(height: 24),
                         TextFormField(
                           decoration: InputDecoration(
-                            hintText: 'E-mail',
+                            labelText: 'E-mail',
                             prefixIcon: Icon(
                               Icons.mail,
                               size: 24,
@@ -50,7 +50,7 @@ class _SignInPageState extends State<SignInPage> {
                         SizedBox(height: 16),
                         TextFormField(
                           decoration: InputDecoration(
-                            hintText: 'Senha',
+                            labelText: 'Senha',
                             prefixIcon: Icon(
                               Icons.lock,
                               size: 24,
@@ -74,10 +74,11 @@ class _SignInPageState extends State<SignInPage> {
                                 form.save();
                                 try {
                                   final user = await _controller.fazLogin();
-                                  Navigator.of(context).push(
+                                  Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
                                       builder: (_) => HomePage(user),
                                     ),
+                                    (Route<dynamic> route) => false,
                                   );
                                 } on UsuarioNaoEncontradoException {} on SenhaErradaException {} on EmailInvalidoException {} on Exception {} finally {
                                   setState(() {
@@ -86,13 +87,7 @@ class _SignInPageState extends State<SignInPage> {
                                 }
                               }
                             },
-                            child: Text(
-                              'Entrar',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
+                            child: Text('Entrar'),
                           ),
                         ),
                         Container(
@@ -103,12 +98,7 @@ class _SignInPageState extends State<SignInPage> {
                                 builder: (_) => SignUpPage(),
                               ),
                             ),
-                            child: Text(
-                              'Cadastrar',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
+                            child: Text('Cadastrar'),
                           ),
                         ),
                       ],

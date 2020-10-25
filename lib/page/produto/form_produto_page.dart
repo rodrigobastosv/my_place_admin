@@ -49,13 +49,21 @@ class _FormProdutoPageState extends State<FormProdutoPage> {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              expandedHeight: _controller.produto.urlImagem == null ? 60 : 140,
+              expandedHeight: _controller.produto.urlImagem == null ? 40 : 200,
+              collapsedHeight: 40,
+              toolbarHeight: 38,
+              elevation: 0.5,
               floating: false,
               pinned: true,
-              backgroundColor: Theme.of(context).primaryColor,
+              leading: IconButton(
+                icon: Icon(Icons.chevron_left),
+                iconSize: 32,
+                padding: EdgeInsets.zero,
+                onPressed: () => Navigator.pop(context),
+              ),
               actions: [
                 IconButton(
-                  icon: Icon(Icons.camera),
+                  icon: Icon(Icons.camera_alt),
                   onPressed: () async {
                     final urlImagem = await _controller.escolheESalvaImagem();
                     setState(() {
@@ -66,11 +74,27 @@ class _FormProdutoPageState extends State<FormProdutoPage> {
               ],
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
-                title: Text(
-                  _controller.produto.nome ?? 'Criar Produto',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
+                titlePadding: EdgeInsetsDirectional.only(
+                  start: 0,
+                  bottom: 0,
+                ),
+                title: Container(
+                  color: Theme.of(context).appBarTheme.color,
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 9),
+                  child: Text(
+                    _controller.produto.nome.isEmpty
+                        ? 'Criar Produto'
+                        : 'Editar Produto',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context)
+                          .appBarTheme
+                          .textTheme
+                          .headline6
+                          .color,
+                    ),
                   ),
                 ),
                 background: Hero(
@@ -93,7 +117,7 @@ class _FormProdutoPageState extends State<FormProdutoPage> {
               final data = snapshot.data;
               final categorias = _controller.getCategoriasFromData(data.docs);
               return Padding(
-                padding: const EdgeInsets.all(22),
+                padding: const EdgeInsets.all(16),
                 child: Form(
                   key: _formKey,
                   child: Column(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_place/exceptions/exceptions.dart';
 import 'package:my_place/page/sign_up/sign_up_controller.dart';
 
-import '../../widget/logo.dart';
+import '../../widget/mp_logo.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -31,7 +31,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Logo(),
+                        MPLogo(),
                         const SizedBox(height: 24),
                         TextFormField(
                           decoration: InputDecoration(
@@ -106,25 +106,14 @@ class _SignUpPageState extends State<SignUpPage> {
                                 }
                               }
                             },
-                            child: Text(
-                              'Confirmar',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
+                            child: Text('Confirmar'),
                           ),
                         ),
                         Container(
                           width: 120,
                           child: OutlineButton(
                             onPressed: () => Navigator.of(context).pop(),
-                            child: Text(
-                              'Voltar',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
+                            child: Text('Voltar'),
                           ),
                         ),
                       ],

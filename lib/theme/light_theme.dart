@@ -5,26 +5,44 @@ final lightTheme = ThemeData(
   primaryColorLight: Colors.deepOrange[200],
   primaryColorDark: Colors.deepOrange[800],
   accentColor: Colors.grey[850],
-  errorColor: Colors.red[900],
+  colorScheme: ColorScheme(
+    background: Colors.grey[100],
+    brightness: Brightness.light,
+    error: Colors.red,
+    onBackground: Colors.grey[800],
+    onError: Colors.white,
+    onPrimary: Colors.white,
+    onSecondary: Colors.white,
+    onSurface: Colors.grey[850],
+    primary: Colors.deepOrange,
+    primaryVariant: Colors.deepOrange[900],
+    secondary: Colors.grey[850],
+    secondaryVariant: Colors.grey[900],
+    surface: Colors.white,
+  ),
   cursorColor: Colors.deepOrange[600],
-  scaffoldBackgroundColor: Colors.grey[50],
+  scaffoldBackgroundColor: Colors.grey[100],
   textSelectionColor: Colors.deepOrange[300],
   textSelectionHandleColor: Colors.deepOrange[600],
   visualDensity: VisualDensity.comfortable,
   buttonTheme: ButtonThemeData(
-    buttonColor: Colors.deepOrange,
+    textTheme: ButtonTextTheme.primary,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(32),
+      borderRadius: BorderRadius.circular(8),
     ),
   ),
-  floatingActionButtonTheme: FloatingActionButtonThemeData(
-    backgroundColor: Colors.deepOrange,
-    foregroundColor: Colors.black,
-    splashColor: Colors.black38,
-  ),
   appBarTheme: AppBarTheme(
-    elevation: 0,
-    color: Colors.grey[50],
+    elevation: 0.5,
+    color: Colors.grey[100],
+    centerTitle: true,
+    iconTheme: IconThemeData(color: Colors.deepOrange),
+    textTheme: TextTheme(
+      headline6: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.grey[850],
+      ),
+    ),
   ),
   bottomAppBarTheme: BottomAppBarTheme(
     color: Colors.grey[50],
@@ -32,48 +50,29 @@ final lightTheme = ThemeData(
   inputDecorationTheme: InputDecorationTheme(
     labelStyle: const TextStyle(color: Colors.black),
     isDense: true,
-    border: OutlineInputBorder(
-      gapPadding: 2,
-      borderSide: BorderSide(
-        color: Colors.grey[850],
-      ),
+    filled: true,
+    border: UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey[200]),
       borderRadius: BorderRadius.circular(10),
     ),
-    enabledBorder: OutlineInputBorder(
-      gapPadding: 2,
-      borderSide: BorderSide(
-        color: Colors.grey[850],
-      ),
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey[200]),
       borderRadius: BorderRadius.circular(10),
     ),
-    disabledBorder: OutlineInputBorder(
-      gapPadding: 2,
-      borderSide: BorderSide(
-        color: Colors.grey[300],
-      ),
+    disabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey[200]),
       borderRadius: BorderRadius.circular(10),
     ),
-    focusedBorder: OutlineInputBorder(
-      gapPadding: 4,
-      borderSide: const BorderSide(
-        width: 2,
-        color: Colors.black,
-      ),
+    focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey[200]),
       borderRadius: BorderRadius.circular(10),
     ),
-    errorBorder: OutlineInputBorder(
-      gapPadding: 2,
-      borderSide: BorderSide(
-        color: Colors.red[600],
-      ),
+    errorBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.red[600]),
       borderRadius: BorderRadius.circular(10),
     ),
-    focusedErrorBorder: OutlineInputBorder(
-      gapPadding: 2,
-      borderSide: BorderSide(
-        width: 2,
-        color: Colors.red[600],
-      ),
+    focusedErrorBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.red[600]),
       borderRadius: BorderRadius.circular(10),
     ),
   ),

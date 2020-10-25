@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_place/page/produto/form_produto_page.dart';
 import 'package:my_place/page/produto/lista_produto_controller.dart';
+import 'package:my_place/widget/mp_appbar.dart';
+import 'package:my_place/widget/mp_list_tile.dart';
+import 'package:my_place/widget/mp_list_view.dart';
 
 class ListaProdutosPage extends StatefulWidget {
   @override
@@ -14,9 +17,20 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: MPAppBar(
         title: Text('Lista de Produtos'),
-        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => FormProdutoPage(null),
+                ),
+              );
+            },
+            icon: Icon(Icons.add),
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _controller.produtosStream,
@@ -24,10 +38,19 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
           if (snapshot.hasData) {
             final docs = snapshot.data.docs;
             final produtos = _controller.getProdutosFromData(docs);
-            return ListView.builder(
+            return MPListView(
+              itemCount: produtos.length,
               itemBuilder: (_, i) {
                 final produto = produtos[i];
-                return ListTile(
+                return MPListTile(
+                  leading: produto.urlImagem != null
+                      ? CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            produto.urlImagem,
+                          ),
+                        )
+                      : Icon(Icons.fastfood),
+                  title: Text(produto.nome),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -35,32 +58,13 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
                       ),
                     );
                   },
-                  leading: produto.urlImagem != null
-                      ? CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            produto.urlImagem,
-                          ),
-                        )
-                      : Icon(Icons.indeterminate_check_box),
-                  title: Text(produto.nome),
                 );
               },
-              itemCount: produtos.length,
             );
           } else {
             return CircularProgressIndicator();
           }
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => FormProdutoPage(null),
-            ),
-          );
-        },
-        child: Icon(Icons.add),
       ),
     );
   }

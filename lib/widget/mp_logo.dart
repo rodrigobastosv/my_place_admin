@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class Logo extends StatelessWidget {
+class MPLogo extends StatelessWidget {
   final double fontSize;
 
-  const Logo({this.fontSize = 56});
+  const MPLogo({this.fontSize = 40});
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Nosh',
+      'MyPlace',
       style: TextStyle(
         fontFamily: 'SansitaSwashed',
         fontSize: fontSize,

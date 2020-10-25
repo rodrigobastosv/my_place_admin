@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_place/page/categoria/form_categoria_page.dart';
+import 'package:my_place/widget/mp_appbar.dart';
+import 'package:my_place/widget/mp_list_tile.dart';
+import 'package:my_place/widget/mp_list_view.dart';
 
 import 'lista_categoria_controller.dart';
 
@@ -10,10 +13,18 @@ class ListaCategoriasPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+      appBar: MPAppBar(
         title: Text('Lista de Categorias'),
-        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => FormCategoriaPage(null),
+              ),
+            ),
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _controller.categoriasStream(),
@@ -21,9 +32,21 @@ class ListaCategoriasPage extends StatelessWidget {
           if (snapshot.hasData) {
             final categorias =
                 _controller.getCategoriasFromDocs(snapshot.data.docs);
-            return ListView.builder(
+            return MPListView(
+              itemCount: categorias.length,
               itemBuilder: (_, i) {
-                return ListTile(
+                return MPListTile(
+                  leading: Hero(
+                    tag: categorias[i].id,
+                    child: categorias[i].urlImagem != null
+                        ? CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              categorias[i].urlImagem,
+                            ),
+                          )
+                        : Icon(Icons.category),
+                  ),
+                  title: Text(categorias[i].nome),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -31,20 +54,8 @@ class ListaCategoriasPage extends StatelessWidget {
                       ),
                     );
                   },
-                  leading: Hero(
-                    tag: categorias[i].id,
-                    child: categorias[i].urlImagem != null
-                      ? CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            categorias[i].urlImagem,
-                          ),
-                        )
-                      : Icon(Icons.category),
-                  ),
-                  title: Text(categorias[i].nome),
                 );
               },
-              itemCount: categorias.length,
             );
           } else if (snapshot.hasError) {
             return Text('Erro');
@@ -52,19 +63,6 @@ class ListaCategoriasPage extends StatelessWidget {
             return CircularProgressIndicator();
           }
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => FormCategoriaPage(null),
-            ),
-          );
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
       ),
     );
   }

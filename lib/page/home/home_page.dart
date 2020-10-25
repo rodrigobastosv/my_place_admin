@@ -1,4 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:my_place/widget/mp_logo.dart';
+import 'package:my_place/widget/mp_appbar.dart';
 
 import '../../model/usuario_model.dart';
 import '../categoria/lista_categorias_page.dart';
@@ -12,59 +16,87 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
+      appBar: MPAppBar(
+        title: MPLogo(fontSize: 24),
+        withLeading: false,
+      ),
+      body: Container(
+        alignment: Alignment.topCenter,
         padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Wrap(
+          spacing: 16,
+          direction: Axis.vertical,
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => ListaProdutosPage(),
-                  ),
-                );
-              },
-              child: Stack(
-                overflow: Overflow.visible,
-                children: [
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      image: DecorationImage(
-                        image: AssetImage('assets/imagens/produtos.jpg'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    child: Container(
-                      height: 80,
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
-              ),
+            _Button(
+              text: 'Categorias',
+              iconData: Icons.category,
+              page: ListaCategoriasPage(),
             ),
-            SizedBox(height: 80),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => ListaCategoriasPage(),
-                  ),
-                );
-              },
-              child: Container(
-                height: 100,
-                width: 100,
-                child: Text('Categorias'),
-              ),
+            _Button(
+              text: 'Produtos',
+              iconData: Icons.fastfood,
+              page: ListaProdutosPage(),
+            ),
+            _Button(
+              text: 'Promoções',
+              iconData: Icons.campaign,
+              page: ListaCategoriasPage(),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Button extends StatelessWidget {
+  final Widget page;
+  final IconData iconData;
+  final String text;
+
+  const _Button({
+    this.page,
+    this.iconData,
+    this.text,
+  })  : assert(page != null),
+        assert(iconData != null),
+        assert(text != null);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Theme.of(context).colorScheme.surface,
+      borderRadius: BorderRadius.circular(8),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => page,
+            ),
+          );
+        },
+        child: Container(
+          width: 185,
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                iconData,
+                size: 32,
+                color: Theme.of(context).primaryColor,
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  text,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
