@@ -25,12 +25,31 @@ class HomePage extends StatelessWidget {
                   ),
                 );
               },
-              child: Container(
-                height: 100,
-                width: 100,
-                child: Text('Produtos'),
+              child: Stack(
+                overflow: Overflow.visible,
+                children: [
+                  Container(
+                    height: 200,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      image: DecorationImage(
+                        image: AssetImage('assets/imagens/produtos.jpg'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                      height: 80,
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
               ),
             ),
+            SizedBox(height: 80),
             GestureDetector(
               onTap: () {
                 Navigator.of(context).push(

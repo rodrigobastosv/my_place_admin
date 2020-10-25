@@ -35,10 +35,10 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
                       ),
                     );
                   },
-                  leading: produto.imagens.isNotEmpty
+                  leading: produto.urlImagem != null
                       ? CircleAvatar(
                           backgroundImage: NetworkImage(
-                            produto.imagens[0],
+                            produto.urlImagem,
                           ),
                         )
                       : Icon(Icons.indeterminate_check_box),

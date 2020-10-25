@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_place/model/categoria_model.dart';
 
 class FormCategoriaController {
@@ -9,16 +9,16 @@ class FormCategoriaController {
   CategoriaModel _categoria;
   final _categoriasRef = FirebaseFirestore.instance.collection('categorias');
   final _firebaseStorage = FirebaseStorage.instance.ref();
+  final _imagePicker = ImagePicker();
 
   CategoriaModel get categoria => _categoria;
 
   Future<String> escolheESalvaImagem() async {
-    final file = await MultiImagePicker.pickImages(
-      enableCamera: true,
-      maxImages: 1,
+    final pickedFile = await _imagePicker.getImage(
+      source: ImageSource.camera,
     );
-    if (file != null) {
-      final image = await file[0].getByteData();
+    if (pickedFile != null) {
+      final image = await pickedFile.readAsBytes();
       final imageData = image.buffer.asUint8List();
       final uploadTask = _firebaseStorage
           .child('categorias')

@@ -3,19 +3,24 @@ class ProdutoModel {
   String nome;
   String descricao;
   String categoria;
-  List<String> imagens;
+  String urlImagem;
+  String preco;
 
-  ProdutoModel({this.nome, this.descricao, this.categoria, this.imagens});
+  ProdutoModel({
+    this.nome,
+    this.descricao,
+    this.categoria,
+    this.urlImagem,
+    this.preco,
+  });
 
   ProdutoModel.fromJson(String docId, Map<String, dynamic> json) {
     id = docId;
     nome = json['nome'];
     descricao = json['descricao'];
     categoria = json['categoria'];
-    final imagensList = json['imagens'] as List<dynamic> ?? [];
-    final imagensUrls =
-        List.generate(imagensList.length, (i) => imagensList[i].toString());
-    imagens = imagensUrls;
+    urlImagem = json['urlImagem'];
+    preco = json['preco'];
   }
 
   Map<String, dynamic> toJson() {
@@ -23,7 +28,8 @@ class ProdutoModel {
     data['nome'] = this.nome;
     data['descricao'] = this.descricao;
     data['categoria'] = this.categoria;
-    data['imagens'] = this.imagens;
+    data['urlImagem'] = this.urlImagem;
+    data['preco'] = this.preco;
     return data;
   }
 }
