@@ -31,6 +31,7 @@ class SignUpController {
       await _userRef.doc(userCredential.user.uid).set({
         'nome': _nome,
         'email': _email,
+        'tipo': 'ADMIN',
       });
     } on Exception catch (e) {
       if (e is FirebaseAuthException) {

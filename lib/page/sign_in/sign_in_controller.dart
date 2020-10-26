@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:my_place/exceptions/email_invalido_exception.dart';
-import 'package:my_place/exceptions/senha_errada_exception.dart';
-import 'package:my_place/exceptions/usuario_nao_encontrado_exception.dart';
 import 'package:my_place/model/usuario_model.dart';
+
+import '../../exceptions/exceptions.dart';
 
 class SignInController {
   String _email = "";
@@ -29,6 +28,9 @@ class SignInController {
       );
       final userFirestore = await _usersRef.doc(userFireAuth.user.uid).get();
       final user = UsuarioModel.fromJson(userFirestore.data());
+      if (user.tipo != 'ADMIN') {
+        throw AdminInvalidoException();
+      }
       return user;
     } on Exception catch (e) {
       if (e is FirebaseAuthException) {

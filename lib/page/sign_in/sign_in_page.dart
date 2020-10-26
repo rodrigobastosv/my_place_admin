@@ -81,7 +81,7 @@ class _SignInPageState extends State<SignInPage> {
                                     ),
                                     (Route<dynamic> route) => false,
                                   );
-                                } on UsuarioNaoEncontradoException {} on SenhaErradaException {} on EmailInvalidoException {} on Exception {} finally {
+                                } on UsuarioNaoEncontradoException {} on SenhaErradaException {} on AdminInvalidoException {} on EmailInvalidoException {} on Exception {} finally {
                                   setState(() {
                                     _controller.setIsLoading(false);
                                   });
