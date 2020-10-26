@@ -41,11 +41,12 @@ class FormPromocaoController {
   }
 
   Future<void> salvaPromocao() async {
+    print(_promocao.desconto);
     await _promocoesRef.doc(_promocao.idProduto).set(_promocao.toJson());
   }
 
-  void setDescontoPromocao(String desconto) {
-    _promocao.desconto = double.parse(PrecoUtils.limpaStringDesconto(desconto));
+  void setDescontoPromocao(double desconto) {
+    _promocao.desconto = desconto;
   }
 
   void setInfoProdutoPromocao(String produtoId) {
@@ -53,6 +54,7 @@ class FormPromocaoController {
     if (produto != null) {
       _promocao.idProduto = produto.id;
       _promocao.nomeProduto = produto.nome;
+      _promocao.valorOriginalProduto = double.parse(PrecoUtils.limpaStringPreco(produto.preco));
     }
   }
 }

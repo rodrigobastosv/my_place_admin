@@ -118,10 +118,18 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
                             }
                             return null;
                           },
-                          onSaved: _controller.setDescontoPromocao,
+                          onSaved: (desconto) {
+                            final stringDesconto =
+                                PrecoUtils.limpaStringDesconto(desconto);
+                            _controller.setDescontoPromocao(double.parse(stringDesconto));
+                          },
                           onChanged: (desconto) {
+                            print('aaaaa');
+                            print(desconto);
+                            final doubleDesconto = double.parse(desconto) / 100;
+                            print(doubleDesconto);
                             setState(() {
-                              _controller.setDescontoPromocao(desconto);
+                              _controller.setDescontoPromocao(doubleDesconto);
                             });
                           },
                         ),

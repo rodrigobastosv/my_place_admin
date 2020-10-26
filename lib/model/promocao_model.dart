@@ -2,12 +2,14 @@ class PromocaoModel {
   String id;
   String idProduto;
   String nomeProduto;
+  double valorOriginalProduto;
   double desconto;
 
   PromocaoModel({
     this.id,
     this.idProduto,
     this.nomeProduto,
+    this.valorOriginalProduto,
     this.desconto,
   });
 
@@ -15,6 +17,7 @@ class PromocaoModel {
     id = docId;
     idProduto = json['idProduto'];
     nomeProduto = json['nomeProduto'];
+    valorOriginalProduto = json['valorOriginalProduto'];
     desconto = json['desconto'];
   }
 
@@ -22,6 +25,7 @@ class PromocaoModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['idProduto'] = this.idProduto;
     data['nomeProduto'] = this.nomeProduto;
+    data['valorOriginalProduto'] = this.valorOriginalProduto;
     data['desconto'] = this.desconto;
     return data;
   }
