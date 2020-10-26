@@ -72,6 +72,7 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
                           initialValue: _controller.promocao.idProduto ?? '',
                           icon: Icon(Icons.ad_units),
                           labelText: 'Produto',
+                          enabled: _controller.promocao.id == null,
                           items: produtos
                               .map((produto) => {
                                     'value': produto.id,
