@@ -7,14 +7,26 @@ class MPLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'MyPlace',
-      style: TextStyle(
-        fontFamily: 'SansitaSwashed',
-        fontSize: fontSize,
-        fontWeight: FontWeight.w500,
-        color: Theme.of(context).primaryColor,
-      ),
+    return RichText(
+      text: TextSpan(children: [
+        TextSpan(
+          text: 'MyPlace ',
+          style: TextStyle(
+            fontFamily: 'SansitaSwashed',
+            fontSize: fontSize,
+            fontWeight: FontWeight.w500,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+        TextSpan(
+          text: ' ADMIN',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+      ]),
     );
   }
 }

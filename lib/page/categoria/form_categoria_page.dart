@@ -17,7 +17,9 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
 
   @override
   void initState() {
-    _controller = FormCategoriaController(widget.categoria ?? CategoriaModel());
+    _controller = FormCategoriaController(
+      widget.categoria ?? CategoriaModel(),
+    );
     super.initState();
   }
 
@@ -63,7 +65,7 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
                   width: double.maxFinite,
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 9),
                   child: Text(
-                    _controller.categoria.nome.isEmpty
+                    _controller.categoria.nome == null
                         ? 'Criar Categoria'
                         : 'Editar Categoria',
                     textAlign: TextAlign.center,
@@ -78,7 +80,7 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
                   ),
                 ),
                 background: Hero(
-                  tag: widget.categoria.id ?? '',
+                  tag: _controller.categoria.id ?? '',
                   child: _controller.categoria.urlImagem == null
                       ? SizedBox()
                       : Image.network(

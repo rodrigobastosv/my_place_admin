@@ -22,7 +22,7 @@ class FormCategoriaController {
       final imageData = image.buffer.asUint8List();
       final uploadTask = _firebaseStorage
           .child('categorias')
-          .child(_categoria.id)
+          .child(imageData.hashCode.toString())
           .putData(imageData);
       final onCompleteTask = await uploadTask.onComplete;
       final categoriaUrl = await onCompleteTask.ref.getDownloadURL();

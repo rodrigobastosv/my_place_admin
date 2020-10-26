@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:my_place/page/promocao/lista_promocoes_page.dart';
 import 'package:my_place/widget/mp_logo.dart';
 import 'package:my_place/widget/mp_appbar.dart';
 
@@ -40,7 +41,7 @@ class HomePage extends StatelessWidget {
             _Button(
               text: 'Promoções',
               iconData: Icons.campaign,
-              page: ListaCategoriasPage(),
+              page: ListaPromocoesPage(),
             ),
           ],
         ),
@@ -78,6 +79,7 @@ class _Button extends StatelessWidget {
         },
         child: Container(
           width: 185,
+          height: 100,
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
           child: Row(
             mainAxisSize: MainAxisSize.max,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_place/exceptions/exceptions.dart';
 import 'package:my_place/page/sign_up/sign_up_controller.dart';
+import 'package:my_place/widget/mp_loading.dart';
 
 import '../../widget/mp_logo.dart';
 
@@ -21,7 +22,7 @@ class _SignUpPageState extends State<SignUpPage> {
         alignment: Alignment.center,
         child: _controller.isLoading
             ? Center(
-                child: CircularProgressIndicator(),
+                child: MPLoading(),
               )
             : SingleChildScrollView(
                 child: Form(

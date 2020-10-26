@@ -1,31 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:my_place/page/produto/form_produto_page.dart';
-import 'package:my_place/page/produto/lista_produto_controller.dart';
 import 'package:my_place/widget/mp_appbar.dart';
 import 'package:my_place/widget/mp_list_tile.dart';
 import 'package:my_place/widget/mp_list_view.dart';
 import 'package:my_place/widget/mp_loading.dart';
 
-class ListaProdutosPage extends StatefulWidget {
+import 'form_promocao_page.dart';
+import 'lista_promocoes_controller.dart';
+
+class ListaPromocoesPage extends StatefulWidget {
+
   @override
-  _ListaProdutosPageState createState() => _ListaProdutosPageState();
+  _ListaPromocoesPageState createState() => _ListaPromocoesPageState();
 }
 
-class _ListaProdutosPageState extends State<ListaProdutosPage> {
-  final _controller = ListaProdutoController();
+class _ListaPromocoesPageState extends State<ListaPromocoesPage> {
+  final _controller = ListaPromocoesController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MPAppBar(
-        title: Text('Lista de Produtos'),
+        title: Text('Lista de Promoções'),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => FormProdutoPage(null),
+                  builder: (_) => FormPromocaoPage(null),
                 ),
               );
             },
@@ -34,28 +36,22 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: _controller.produtosStream,
+        stream: _controller.promocoesStream,
         builder: (_, snapshot) {
           if (snapshot.hasData) {
             final docs = snapshot.data.docs;
-            final produtos = _controller.getProdutosFromData(docs);
+            final promocoes = _controller.getPromocoesFromData(docs);
             return MPListView(
-              itemCount: produtos.length,
+              itemCount: promocoes.length,
               itemBuilder: (_, i) {
-                final produto = produtos[i];
+                final promocao = promocoes[i];
                 return MPListTile(
-                  leading: produto.urlImagem != null
-                      ? CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            produto.urlImagem,
-                          ),
-                        )
-                      : Icon(Icons.fastfood),
-                  title: Text(produto.nome),
+                  leading: Icon(Icons.campaign),
+                  title: Text(promocao.nomeProduto),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => FormProdutoPage(produto),
+                        builder: (_) => FormPromocaoPage(promocao),
                       ),
                     );
                   },

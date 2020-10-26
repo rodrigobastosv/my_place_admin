@@ -5,6 +5,7 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:my_place/model/produto_model.dart';
 import 'package:my_place/page/produto/form_produto_controller.dart';
 import 'package:my_place/util/preco_utils.dart';
+import 'package:my_place/widget/mp_loading.dart';
 import 'package:select_form_field/select_form_field.dart';
 
 class FormProdutoPage extends StatefulWidget {
@@ -83,7 +84,7 @@ class _FormProdutoPageState extends State<FormProdutoPage> {
                   width: double.maxFinite,
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 9),
                   child: Text(
-                    _controller.produto.nome.isEmpty
+                    _controller.produto.nome == null
                         ? 'Criar Produto'
                         : 'Editar Produto',
                     textAlign: TextAlign.center,
@@ -200,7 +201,7 @@ class _FormProdutoPageState extends State<FormProdutoPage> {
               );
             }
             return Center(
-              child: CircularProgressIndicator(),
+              child: MPLoading(),
             );
           },
         ),

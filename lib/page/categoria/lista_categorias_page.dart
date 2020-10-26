@@ -4,6 +4,7 @@ import 'package:my_place/page/categoria/form_categoria_page.dart';
 import 'package:my_place/widget/mp_appbar.dart';
 import 'package:my_place/widget/mp_list_tile.dart';
 import 'package:my_place/widget/mp_list_view.dart';
+import 'package:my_place/widget/mp_loading.dart';
 
 import 'lista_categoria_controller.dart';
 
@@ -60,7 +61,7 @@ class ListaCategoriasPage extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Text('Erro');
           } else {
-            return CircularProgressIndicator();
+            return MPLoading();
           }
         },
       ),
