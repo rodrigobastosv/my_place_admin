@@ -17,6 +17,8 @@ class FormPromocaoController {
 
   bool get isLoading => _isLoading;
 
+  bool get temProdutoEscolhido => _promocao.idProduto != null;
+
   Future<List<ProdutoModel>> get getProdutosFuture => getProdutos();
 
   Future<List<ProdutoModel>> getProdutos() async {
@@ -27,12 +29,24 @@ class FormPromocaoController {
     return listaProdutos;
   }
 
+  ProdutoModel getProdutoEscolhido() {
+    return listaProdutos
+        .firstWhere((produto) => produto.id == _promocao.idProduto);
+  }
+
+  double calculaPrecoComDesconto() {
+    final produto = getProdutoEscolhido();
+    final preco = double.parse(PrecoUtils.limpaStringPreco(produto.preco));
+    return preco - ((preco * (_promocao.desconto ?? 0)) / 100);
+  }
+
   Future<void> salvaPromocao() async {
     await _promocoesRef.doc(_promocao.idProduto).set(_promocao.toJson());
   }
 
-  void setDescontoPromocao(String desconto) => _promocao.desconto =
-      double.parse(PrecoUtils.limpaStringDesconto(desconto));
+  void setDescontoPromocao(String desconto) {
+    _promocao.desconto = double.parse(PrecoUtils.limpaStringDesconto(desconto));
+  }
 
   void setInfoProdutoPromocao(String produtoId) {
     final produto = listaProdutos.firstWhere((prod) => prod.id == produtoId);

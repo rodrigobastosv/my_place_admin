@@ -8,6 +8,8 @@ import 'package:my_place/util/preco_utils.dart';
 import 'package:my_place/widget/mp_loading.dart';
 import 'package:select_form_field/select_form_field.dart';
 
+import 'widget/preco_desconto_produto.dart';
+
 class FormPromocaoPage extends StatefulWidget {
   FormPromocaoPage(this.promocao);
 
@@ -81,7 +83,11 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
                               .toList(),
                           validator: (produto) =>
                               produto.isEmpty ? 'Campo Obrigatório' : null,
-                          onChanged: _controller.setInfoProdutoPromocao,
+                          onChanged: (produto) {
+                            setState(() {
+                              _controller.setInfoProdutoPromocao(produto);
+                            });
+                          },
                         ),
                         SizedBox(height: 12),
                         TextFormField(
@@ -113,8 +119,19 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
                             return null;
                           },
                           onSaved: _controller.setDescontoPromocao,
+                          onChanged: (desconto) {
+                            setState(() {
+                              _controller.setDescontoPromocao(desconto);
+                            });
+                          },
                         ),
                         SizedBox(height: 12),
+                        if (_controller.promocao.id != null ||
+                            _controller.temProdutoEscolhido)
+                          PrecoDescontoProduto(
+                            desconto: _controller.promocao.desconto,
+                            preco: _controller.calculaPrecoComDesconto(),
+                          )
                       ],
                     ),
                   );
