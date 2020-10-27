@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Wrap(
           spacing: 16,
-          direction: Axis.vertical,
+          runSpacing: 16,
           children: [
             _Button(
               text: 'Categorias',
@@ -78,10 +78,10 @@ class _Button extends StatelessWidget {
           );
         },
         child: Container(
-          width: 185,
-          height: 100,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-          child: Row(
+          width: 100,
+          height: 80,
+          padding: const EdgeInsets.all(8),
+          child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -90,12 +90,10 @@ class _Button extends StatelessWidget {
                 size: 32,
                 color: Theme.of(context).primaryColor,
               ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  text,
-                  style: TextStyle(fontSize: 16),
-                ),
+              const SizedBox(height: 6),
+              Text(
+                text,
+                style: TextStyle(fontSize: 16),
               ),
             ],
           ),

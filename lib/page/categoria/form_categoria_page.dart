@@ -27,154 +27,180 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              expandedHeight:
-                  _controller.categoria.urlImagem == null ? 40 : 200,
-              collapsedHeight: 40,
-              toolbarHeight: 38,
-              elevation: 0.5,
-              floating: false,
-              pinned: true,
-              leading: IconButton(
-                icon: Icon(Icons.chevron_left),
-                iconSize: 32,
-                padding: EdgeInsets.zero,
-                onPressed: () => Navigator.pop(context),
-              ),
-              actions: [
-                PopupMenuButton(
-                  icon: Icon(Icons.camera_alt),
-                  itemBuilder: (_) => [
-                    PopupMenuItem<String>(
-                      value: 'Camera',
-                      child: Row(
-                        children: [
-                          Icon(Icons.camera),
-                          SizedBox(width: 8),
-                          Text(
-                            'Camera',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                expandedHeight: 240,
+                collapsedHeight: 40,
+                toolbarHeight: 38,
+                elevation: 0.5,
+                floating: false,
+                pinned: true,
+                title: Text(
+                  _controller.categoria.nome == null
+                      ? 'Criar Categoria'
+                      : 'Editar Categoria',
+                ),
+                leading: IconButton(
+                  icon: Icon(Icons.chevron_left),
+                  iconSize: 32,
+                  padding: EdgeInsets.zero,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.check),
+                    onPressed: () async {
+                      final form = _formKey.currentState;
+                      if (form.validate()) {
+                        form.save();
+                        await _controller.salvaCategoria();
+                      }
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                ],
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 44, 16, 20),
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            width: double.maxFinite,
+                            child: _controller.categoria.urlImagem == null
+                                ? Image.asset(
+                                    'assets/imagens/produtos.jpg',
+                                    fit: BoxFit.cover,
+                                  )
+                                : Hero(
+                                    tag: _controller.categoria.id ?? '',
+                                    child: Image.network(
+                                      _controller.categoria.urlImagem,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 8,
+                          right: 8,
+                          child: Material(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .background
+                                .withOpacity(.7),
+                            child: PopupMenuButton(
+                              icon: Icon(
+                                Icons.camera_alt,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              itemBuilder: (_) => [
+                                PopupMenuItem<String>(
+                                  value: 'Camera',
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.photo_camera,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Camera',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem<String>(
+                                  value: 'Galeria',
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.photo_library,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Galeria',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                              onSelected: (valor) async {
+                                final urlImagem =
+                                    await _controller.escolheESalvaImagem(
+                                  valor == 'Camera'
+                                      ? ImageSource.camera
+                                      : ImageSource.gallery,
+                                );
+                                setState(() {
+                                  _controller.setUrlImagemCategoria(urlImagem);
+                                });
+                              },
                             ),
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ];
+          },
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 300,
+                      child: TextFormField(
+                        initialValue: _controller.categoria.nome ?? '',
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          labelText: 'Nome',
+                          hintText: 'Nome',
+                        ),
+                        validator: (nome) =>
+                            nome.isEmpty ? 'Campo Obrigatório' : null,
+                        onSaved: _controller.setNomeCategoria,
                       ),
                     ),
-                    PopupMenuItem<String>(
-                      value: 'Galeria',
-                      child: Row(
-                        children: [
-                          Icon(Icons.photo_album),
-                          SizedBox(width: 8),
-                          Text(
-                            'Galeria',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                            ),
+                    SizedBox(height: 12),
+                    Container(
+                      width: 400,
+                      child: TextFormField(
+                        initialValue: _controller.categoria.descricao ?? '',
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        ],
+                          labelText: 'Descrição',
+                          hintText: 'Descrição',
+                        ),
+                        validator: (descricao) =>
+                            descricao.isEmpty ? 'Campo Obrigatório' : null,
+                        onSaved: _controller.setDescricaoCategoria,
                       ),
                     ),
                   ],
-                  onSelected: (valor) async {
-                    final urlImagem = await _controller.escolheESalvaImagem(
-                      valor == 'Camera' ? ImageSource.camera : ImageSource.gallery,
-                    );
-                    setState(() {
-                      _controller.setUrlImagemCategoria(urlImagem);
-                    });
-                  },
-                ),
-              ],
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                titlePadding: EdgeInsetsDirectional.only(
-                  start: 0,
-                  bottom: 0,
-                ),
-                title: Container(
-                  color: Theme.of(context).appBarTheme.color,
-                  width: double.maxFinite,
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 9),
-                  child: Text(
-                    _controller.categoria.nome == null
-                        ? 'Criar Categoria'
-                        : 'Editar Categoria',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context)
-                          .appBarTheme
-                          .textTheme
-                          .headline6
-                          .color,
-                    ),
-                  ),
-                ),
-                background: Hero(
-                  tag: _controller.categoria.id ?? '',
-                  child: _controller.categoria.urlImagem == null
-                      ? SizedBox()
-                      : Image.network(
-                          _controller.categoria.urlImagem,
-                          fit: BoxFit.cover,
-                        ),
                 ),
               ),
             ),
-          ];
-        },
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  initialValue: _controller.categoria.nome ?? '',
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    labelText: 'Nome',
-                    hintText: 'Nome',
-                  ),
-                  validator: (nome) =>
-                      nome.isEmpty ? 'Campo Obrigatório' : null,
-                  onSaved: _controller.setNomeCategoria,
-                ),
-                SizedBox(height: 12),
-                TextFormField(
-                  initialValue: _controller.categoria.descricao ?? '',
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    labelText: 'Descrição',
-                    hintText: 'Descrição',
-                  ),
-                  validator: (descricao) =>
-                      descricao.isEmpty ? 'Campo Obrigatório' : null,
-                  onSaved: _controller.setDescricaoCategoria,
-                ),
-              ],
-            ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final form = _formKey.currentState;
-          if (form.validate()) {
-            form.save();
-            await _controller.salvaCategoria();
-          }
-          Navigator.of(context).pop();
-        },
-        child: Icon(Icons.check),
       ),
     );
   }

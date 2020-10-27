@@ -47,210 +47,248 @@ class _FormProdutoPageState extends State<FormProdutoPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              expandedHeight: _controller.produto.urlImagem == null ? 40 : 200,
-              collapsedHeight: 40,
-              toolbarHeight: 38,
-              elevation: 0.5,
-              floating: false,
-              pinned: true,
-              leading: IconButton(
-                icon: Icon(Icons.chevron_left),
-                iconSize: 32,
-                padding: EdgeInsets.zero,
-                onPressed: () => Navigator.pop(context),
-              ),
-              actions: [
-                PopupMenuButton(
-                  icon: Icon(Icons.camera_alt),
-                  itemBuilder: (_) => [
-                    PopupMenuItem<String>(
-                      value: 'Camera',
-                      child: Row(
-                        children: [
-                          Icon(Icons.camera),
-                          SizedBox(width: 8),
-                          Text(
-                            'Camera',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Galeria',
-                      child: Row(
-                        children: [
-                          Icon(Icons.photo_album),
-                          SizedBox(width: 8),
-                          Text(
-                            'Galeria',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                  onSelected: (valor) async {
-                    final urlImagem = await _controller.escolheESalvaImagem(
-                      valor == 'Camera' ? ImageSource.camera : ImageSource.gallery,
-                    );
-                    setState(() {
-                      _controller.setUrlImagemProduto(urlImagem);
-                    });
-                  },
-                )
-              ],
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                titlePadding: EdgeInsetsDirectional.only(
-                  start: 0,
-                  bottom: 0,
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                expandedHeight: 240,
+                collapsedHeight: 40,
+                toolbarHeight: 38,
+                elevation: 0.5,
+                floating: false,
+                pinned: true,
+                title: Text(
+                  _controller.produto.nome == null
+                      ? 'Criar Produto'
+                      : 'Editar Produto',
                 ),
-                title: Container(
-                  color: Theme.of(context).appBarTheme.color,
-                  width: double.maxFinite,
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 9),
-                  child: Text(
-                    _controller.produto.nome == null
-                        ? 'Criar Produto'
-                        : 'Editar Produto',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context)
-                          .appBarTheme
-                          .textTheme
-                          .headline6
-                          .color,
+                leading: IconButton(
+                  icon: Icon(Icons.chevron_left),
+                  iconSize: 32,
+                  padding: EdgeInsets.zero,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.check),
+                    onPressed: () async {
+                      final form = _formKey.currentState;
+                      if (form.validate()) {
+                        form.save();
+                        await _controller.salvarProduto();
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                ],
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 44, 16, 20),
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            width: double.maxFinite,
+                            child: _controller.produto.urlImagem.isEmpty
+                                ? Image.asset(
+                                    'assets/imagens/produtos.jpg',
+                                    fit: BoxFit.cover,
+                                  )
+                                : Hero(
+                                    tag: _controller.produto.id ?? '',
+                                    child: Image.network(
+                                      _controller.produto.urlImagem,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 8,
+                          right: 8,
+                          child: Material(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .background
+                                .withOpacity(.7),
+                            child: PopupMenuButton(
+                              icon: Icon(
+                                Icons.camera_alt,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              itemBuilder: (_) => [
+                                PopupMenuItem<String>(
+                                  value: 'Camera',
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.photo_camera,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Camera'
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem<String>(
+                                  value: 'Galeria',
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.photo_library,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Galeria'
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                              onSelected: (valor) async {
+                                final urlImagem =
+                                    await _controller.escolheESalvaImagem(
+                                  valor == 'Camera'
+                                      ? ImageSource.camera
+                                      : ImageSource.gallery,
+                                );
+                                setState(() {
+                                  _controller.setUrlImagemProduto(urlImagem);
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                background: Hero(
-                  tag: _controller.produto.id ?? '',
-                  child: _controller.produto.urlImagem == null
-                      ? SizedBox()
-                      : Image.network(
-                          _controller.produto.urlImagem,
-                          fit: BoxFit.cover,
-                        ),
-                ),
+              ),
+            ];
+          },
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: FutureBuilder<QuerySnapshot>(
+                future: _controller.categoriasFuture,
+                builder: (_, snapshot) {
+                  if (snapshot.hasData) {
+                    final data = snapshot.data;
+                    final categorias =
+                        _controller.getCategoriasFromData(data.docs);
+                    return Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 300,
+                            child: SelectFormField(
+                              initialValue: _controller.produto.categoria,
+                              labelText: 'Categoria',
+                              items: categorias
+                                  .map((categoria) => {
+                                        'value': categoria,
+                                        'label': categoria,
+                                      })
+                                  .toList(),
+                              validator: (categoria) => categoria.isEmpty
+                                  ? 'Campo Obrigatório'
+                                  : null,
+                              onSaved: (categoria) =>
+                                  _controller.produto.categoria = categoria,
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Container(
+                            width: 300,
+                            child: TextFormField(
+                              initialValue: _controller.produto.nome,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                hintText: 'Escreva o nome do produto...',
+                                labelText: 'Nome',
+                              ),
+                              validator: (nome) =>
+                                  nome.isEmpty ? 'Campo Obrigatório' : null,
+                              onSaved: (nome) =>
+                                  _controller.produto.nome = nome,
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Container(
+                            width: 400,
+                            child: TextFormField(
+                              initialValue: _controller.produto.descricao,
+                              maxLines: 5,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                hintText:
+                                    'Texto a ser mostrado para o cliente...',
+                                labelText: 'Descrição',
+                              ),
+                              validator: (descricao) => descricao.isEmpty
+                                  ? 'Campo Obrigatório'
+                                  : null,
+                              onSaved: (descricao) =>
+                                  _controller.produto.descricao = descricao,
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Container(
+                            width: 150,
+                            child: TextFormField(
+                              controller: _precoController,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r"\d+"),
+                                ),
+                              ],
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                labelText: 'Preço',
+                              ),
+                              keyboardType: TextInputType.number,
+                              validator: (preco) {
+                                if (preco == null || preco == 'R\$') {
+                                  return 'Campo Obrigatório';
+                                } else if (PrecoUtils.getNumeroStringPreco(
+                                        preco) ==
+                                    0) {
+                                  return 'O preço do produto não pode ser 0.';
+                                }
+                                return null;
+                              },
+                              onSaved: _controller.setPrecoProduto,
+                              onChanged: (preco) =>
+                                  _precoController.text = preco,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return Center(
+                    child: MPLoading(),
+                  );
+                },
               ),
             ),
-          ];
-        },
-        body: FutureBuilder<QuerySnapshot>(
-          future: _controller.categoriasFuture,
-          builder: (_, snapshot) {
-            if (snapshot.hasData) {
-              final data = snapshot.data;
-              final categorias = _controller.getCategoriasFromData(data.docs);
-              return Padding(
-                padding: const EdgeInsets.all(16),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      SelectFormField(
-                        initialValue: _controller.produto.categoria,
-                        icon: Icon(Icons.format_shapes),
-                        labelText: 'Categoria',
-                        items: categorias
-                            .map((categoria) => {
-                                  'value': categoria,
-                                  'label': categoria,
-                                })
-                            .toList(),
-                        validator: (categoria) =>
-                            categoria.isEmpty ? 'Campo Obrigatório' : null,
-                        onSaved: (categoria) =>
-                            _controller.produto.categoria = categoria,
-                      ),
-                      SizedBox(height: 12),
-                      TextFormField(
-                        initialValue: _controller.produto.nome,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          hintText: 'Escreva o nome do produto...',
-                          labelText: 'Nome',
-                        ),
-                        validator: (nome) =>
-                            nome.isEmpty ? 'Campo Obrigatório' : null,
-                        onSaved: (nome) => _controller.produto.nome = nome,
-                      ),
-                      SizedBox(height: 12),
-                      TextFormField(
-                        initialValue: _controller.produto.descricao,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          hintText: 'Texto a ser mostrado para o cliente...',
-                          labelText: 'Descrição',
-                        ),
-                        validator: (descricao) =>
-                            descricao.isEmpty ? 'Campo Obrigatório' : null,
-                        onSaved: (descricao) =>
-                            _controller.produto.descricao = descricao,
-                      ),
-                      SizedBox(height: 12),
-                      TextFormField(
-                        controller: _precoController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r"\d+"),
-                          ),
-                        ],
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          labelText: 'Preço',
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (preco) {
-                          if (preco == null || preco == 'R\$') {
-                            return 'Campo Obrigatório';
-                          } else if (PrecoUtils.getNumeroStringPreco(preco) ==
-                              0) {
-                            return 'O preço do produto não pode ser 0.';
-                          }
-                          return null;
-                        },
-                        onSaved: _controller.setPrecoProduto,
-                        onChanged: (preco) => _precoController.text = preco,
-                      ),
-                      SizedBox(height: 12),
-                    ],
-                  ),
-                ),
-              );
-            }
-            return Center(
-              child: MPLoading(),
-            );
-          },
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final form = _formKey.currentState;
-          if (form.validate()) {
-            form.save();
-            await _controller.salvarProduto();
-            Navigator.of(context).pop();
-          }
-        },
-        child: Icon(Icons.check),
       ),
     );
   }

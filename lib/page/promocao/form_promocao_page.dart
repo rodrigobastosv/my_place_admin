@@ -5,6 +5,7 @@ import 'package:my_place/model/produto_model.dart';
 import 'package:my_place/model/promocao_model.dart';
 import 'package:my_place/page/promocao/form_promocao_controller.dart';
 import 'package:my_place/util/preco_utils.dart';
+import 'package:my_place/widget/mp_appbar.dart';
 import 'package:my_place/widget/mp_loading.dart';
 import 'package:select_form_field/select_form_field.dart';
 
@@ -41,9 +42,30 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      appBar: MPAppBar(
+        title: Text(
+          _controller.promocao.id == null
+              ? 'Criar Promoção'
+              : 'Editar Promoção',
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.check),
+            onPressed: () async {
+              final form = _formKey.currentState;
+              if (form.validate()) {
+                form.save();
+                await _controller.salvaPromocao();
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: Form(
             key: _formKey,
             child: FutureBuilder<List<ProdutoModel>>(
@@ -51,28 +73,13 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
               builder: (_, snapshot) {
                 if (snapshot.hasData) {
                   final produtos = snapshot.data;
-                  return Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        Text(
-                          _controller.promocao.id == null
-                              ? 'Criar Promoção'
-                              : 'Editar Promoção',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context)
-                                .appBarTheme
-                                .textTheme
-                                .headline6
-                                .color,
-                          ),
-                        ),
-                        SizedBox(height: 12),
-                        SelectFormField(
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 300,
+                        child: SelectFormField(
                           initialValue: _controller.promocao.idProduto ?? '',
-                          icon: Icon(Icons.ad_units),
                           labelText: 'Produto',
                           enabled: _controller.promocao.id == null,
                           items: produtos
@@ -89,8 +96,11 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
                             });
                           },
                         ),
-                        SizedBox(height: 12),
-                        TextFormField(
+                      ),
+                      SizedBox(height: 12),
+                      Container(
+                        width: 150,
+                        child: TextFormField(
                           controller: _precoController,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(
@@ -121,7 +131,8 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
                           onSaved: (desconto) {
                             final stringDesconto =
                                 PrecoUtils.limpaStringDesconto(desconto);
-                            _controller.setDescontoPromocao(double.parse(stringDesconto));
+                            _controller.setDescontoPromocao(
+                                double.parse(stringDesconto));
                           },
                           onChanged: (desconto) {
                             print('aaaaa');
@@ -133,15 +144,15 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
                             });
                           },
                         ),
-                        SizedBox(height: 12),
-                        if (_controller.promocao.id != null ||
-                            _controller.temProdutoEscolhido)
-                          PrecoDescontoProduto(
-                            desconto: _controller.promocao.desconto,
-                            preco: _controller.calculaPrecoComDesconto(),
-                          )
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 12),
+                      if (_controller.promocao.id != null ||
+                          _controller.temProdutoEscolhido)
+                        PrecoDescontoProduto(
+                          desconto: _controller.promocao.desconto,
+                          preco: _controller.calculaPrecoComDesconto(),
+                        )
+                    ],
                   );
                 }
                 return Center(
@@ -151,17 +162,6 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
             ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final form = _formKey.currentState;
-          if (form.validate()) {
-            form.save();
-            await _controller.salvaPromocao();
-            Navigator.of(context).pop();
-          }
-        },
-        child: Icon(Icons.check),
       ),
     );
   }

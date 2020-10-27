@@ -10,7 +10,7 @@ class MPLogo extends StatelessWidget {
     return RichText(
       text: TextSpan(children: [
         TextSpan(
-          text: 'MyPlace ',
+          text: 'MyPlace',
           style: TextStyle(
             fontFamily: 'SansitaSwashed',
             fontSize: fontSize,
@@ -21,9 +21,9 @@ class MPLogo extends StatelessWidget {
         TextSpan(
           text: ' ADMIN',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: fontSize/2,
             fontWeight: FontWeight.w500,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).accentColor,
           ),
         ),
       ]),

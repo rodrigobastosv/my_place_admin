@@ -12,9 +12,16 @@ class PrecoDescontoProduto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      width: 300,
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        border: Border.all(color: Theme.of(context).primaryColorLight),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Text(
-          'Com o desconto de ${desconto ?? '0'} %, o preço de venda do produto será ${preco.toStringAsFixed(2)}'),
+        '''Com o desconto de ${desconto ?? '0'}%,'''
+        '''\no preço de venda do produto será R\$ ${preco.toStringAsFixed(2)}''',
+      ),
     );
   }
 }

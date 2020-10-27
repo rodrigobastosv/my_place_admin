@@ -48,7 +48,6 @@ final lightTheme = ThemeData(
     color: Colors.grey[50],
   ),
   inputDecorationTheme: InputDecorationTheme(
-    labelStyle: const TextStyle(color: Colors.black),
     isDense: true,
     filled: true,
     border: UnderlineInputBorder(
