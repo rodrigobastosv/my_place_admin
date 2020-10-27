@@ -54,7 +54,9 @@ class FormPromocaoController {
     if (produto != null) {
       _promocao.idProduto = produto.id;
       _promocao.nomeProduto = produto.nome;
-      _promocao.valorOriginalProduto = double.parse(PrecoUtils.limpaStringPreco(produto.preco));
+      _promocao.urlImagem = produto.urlImagem;
+      _promocao.valorOriginalProduto =
+          double.parse(PrecoUtils.limpaStringPreco(produto.preco));
     }
   }
 }

@@ -2,6 +2,7 @@ class PromocaoModel {
   String id;
   String idProduto;
   String nomeProduto;
+  String urlImagem;
   double valorOriginalProduto;
   double desconto;
 
@@ -9,6 +10,7 @@ class PromocaoModel {
     this.id,
     this.idProduto,
     this.nomeProduto,
+    this.urlImagem,
     this.valorOriginalProduto,
     this.desconto,
   });
@@ -17,6 +19,7 @@ class PromocaoModel {
     id = docId;
     idProduto = json['idProduto'];
     nomeProduto = json['nomeProduto'];
+    urlImagem = json['urlImagem'];
     valorOriginalProduto = json['valorOriginalProduto'];
     desconto = json['desconto'];
   }
@@ -25,6 +28,7 @@ class PromocaoModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['idProduto'] = this.idProduto;
     data['nomeProduto'] = this.nomeProduto;
+    data['urlImagem'] = this.urlImagem;
     data['valorOriginalProduto'] = this.valorOriginalProduto;
     data['desconto'] = this.desconto;
     return data;

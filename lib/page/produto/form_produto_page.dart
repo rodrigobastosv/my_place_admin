@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_place/model/produto_model.dart';
 import 'package:my_place/page/produto/form_produto_controller.dart';
 import 'package:my_place/util/preco_utils.dart';
@@ -63,15 +64,49 @@ class _FormProdutoPageState extends State<FormProdutoPage> {
                 onPressed: () => Navigator.pop(context),
               ),
               actions: [
-                IconButton(
+                PopupMenuButton(
                   icon: Icon(Icons.camera_alt),
-                  onPressed: () async {
-                    final urlImagem = await _controller.escolheESalvaImagem();
+                  itemBuilder: (_) => [
+                    PopupMenuItem<String>(
+                      value: 'Camera',
+                      child: Row(
+                        children: [
+                          Icon(Icons.camera),
+                          SizedBox(width: 8),
+                          Text(
+                            'Camera',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'Galeria',
+                      child: Row(
+                        children: [
+                          Icon(Icons.photo_album),
+                          SizedBox(width: 8),
+                          Text(
+                            'Galeria',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  onSelected: (valor) async {
+                    final urlImagem = await _controller.escolheESalvaImagem(
+                      valor == 'Camera' ? ImageSource.camera : ImageSource.gallery,
+                    );
                     setState(() {
                       _controller.setUrlImagemProduto(urlImagem);
                     });
                   },
-                ),
+                )
               ],
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,

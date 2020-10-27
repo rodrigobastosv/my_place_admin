@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_place/model/categoria_model.dart';
 import 'package:my_place/page/categoria/form_categoria_controller.dart';
 
@@ -44,10 +45,44 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
                 onPressed: () => Navigator.pop(context),
               ),
               actions: [
-                IconButton(
+                PopupMenuButton(
                   icon: Icon(Icons.camera_alt),
-                  onPressed: () async {
-                    final urlImagem = await _controller.escolheESalvaImagem();
+                  itemBuilder: (_) => [
+                    PopupMenuItem<String>(
+                      value: 'Camera',
+                      child: Row(
+                        children: [
+                          Icon(Icons.camera),
+                          SizedBox(width: 8),
+                          Text(
+                            'Camera',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'Galeria',
+                      child: Row(
+                        children: [
+                          Icon(Icons.photo_album),
+                          SizedBox(width: 8),
+                          Text(
+                            'Galeria',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  onSelected: (valor) async {
+                    final urlImagem = await _controller.escolheESalvaImagem(
+                      valor == 'Camera' ? ImageSource.camera : ImageSource.gallery,
+                    );
                     setState(() {
                       _controller.setUrlImagemCategoria(urlImagem);
                     });

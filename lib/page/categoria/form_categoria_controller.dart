@@ -13,10 +13,8 @@ class FormCategoriaController {
 
   CategoriaModel get categoria => _categoria;
 
-  Future<String> escolheESalvaImagem() async {
-    final pickedFile = await _imagePicker.getImage(
-      source: ImageSource.camera,
-    );
+  Future<String> escolheESalvaImagem(ImageSource source) async {
+    final pickedFile = await _imagePicker.getImage(source: source);
     if (pickedFile != null) {
       final image = await pickedFile.readAsBytes();
       final imageData = image.buffer.asUint8List();
