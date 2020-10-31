@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_place/model/categoria_model.dart';
 import 'package:my_place/page/categoria/form_categoria_controller.dart';
+import 'package:my_place/widget/mp_button_icon.dart';
 
 class FormCategoriaPage extends StatefulWidget {
   FormCategoriaPage(this.categoria);
@@ -43,16 +44,15 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
                       ? 'Criar Categoria'
                       : 'Editar Categoria',
                 ),
-                leading: IconButton(
-                  icon: Icon(Icons.chevron_left),
-                  iconSize: 32,
-                  padding: EdgeInsets.zero,
-                  onPressed: () => Navigator.pop(context),
+                leadingWidth: 40,
+                leading: MPButtonIcon(
+                  iconData: Icons.chevron_left,
+                  onTap: () => Navigator.pop(context),
                 ),
                 actions: [
-                  IconButton(
-                    icon: Icon(Icons.check),
-                    onPressed: () async {
+                  MPButtonIcon(
+                    iconData: Icons.check,
+                    onTap: () async {
                       final form = _formKey.currentState;
                       if (form.validate()) {
                         form.save();
@@ -61,7 +61,6 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
                       Navigator.of(context).pop();
                     },
                   ),
-                  const SizedBox(width: 8),
                 ],
                 flexibleSpace: FlexibleSpaceBar(
                   background: Padding(
@@ -72,10 +71,15 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
                           borderRadius: BorderRadius.circular(10),
                           child: Container(
                             width: double.maxFinite,
+                            color: Theme.of(context).colorScheme.surface,
                             child: _controller.categoria.urlImagem == null
-                                ? Image.asset(
-                                    'assets/imagens/produtos.jpg',
-                                    fit: BoxFit.cover,
+                                ? Center(
+                                    child: Icon(
+                                      Icons.image_outlined,
+                                      size: 100,
+                                      color:
+                                          Theme.of(context).primaryColorLight,
+                                    ),
                                   )
                                 : Hero(
                                     tag: _controller.categoria.id ?? '',

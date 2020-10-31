@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_place/widget/mp_button_icon.dart';
 
 class MPAppBar extends PreferredSize {
   final Widget title;
@@ -21,13 +22,12 @@ class MPAppBar extends PreferredSize {
         height: preferredSize.height,
         child: AppBar(
           title: title,
+          leadingWidth: 40,
           leading: !withLeading
               ? null
-              : IconButton(
-                  icon: Icon(Icons.chevron_left),
-                  iconSize: 32,
-                  padding: EdgeInsets.zero,
-                  onPressed: () => Navigator.pop(context),
+              : MPButtonIcon(
+                  iconData: Icons.chevron_left,
+                  onTap: () => Navigator.pop(context),
                 ),
           actions: actions,
         ),

@@ -6,6 +6,7 @@ import 'package:my_place/model/promocao_model.dart';
 import 'package:my_place/page/promocao/form_promocao_controller.dart';
 import 'package:my_place/util/preco_utils.dart';
 import 'package:my_place/widget/mp_appbar.dart';
+import 'package:my_place/widget/mp_button_icon.dart';
 import 'package:my_place/widget/mp_loading.dart';
 import 'package:select_form_field/select_form_field.dart';
 
@@ -49,9 +50,9 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
               : 'Editar Promoção',
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.check),
-            onPressed: () async {
+          MPButtonIcon(
+            iconData: Icons.check,
+            onTap: () async {
               final form = _formKey.currentState;
               if (form.validate()) {
                 form.save();
@@ -60,7 +61,6 @@ class _FormPromocaoPageState extends State<FormPromocaoPage> {
               }
             },
           ),
-          const SizedBox(width: 8),
         ],
       ),
       body: SingleChildScrollView(

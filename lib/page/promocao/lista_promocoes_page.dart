@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_place/widget/mp_appbar.dart';
+import 'package:my_place/widget/mp_button_icon.dart';
 import 'package:my_place/widget/mp_list_tile.dart';
 import 'package:my_place/widget/mp_list_view.dart';
 import 'package:my_place/widget/mp_loading.dart';
@@ -23,15 +24,15 @@ class _ListaPromocoesPageState extends State<ListaPromocoesPage> {
       appBar: MPAppBar(
         title: Text('Lista de Promoções'),
         actions: [
-          IconButton(
-            onPressed: () {
+          MPButtonIcon(
+            iconData: Icons.add,
+            onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => FormPromocaoPage(null),
                 ),
               );
             },
-            icon: Icon(Icons.add),
           ),
         ],
       ),

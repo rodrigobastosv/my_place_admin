@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:my_place/page/produto/form_produto_page.dart';
 import 'package:my_place/page/produto/lista_produto_controller.dart';
 import 'package:my_place/widget/mp_appbar.dart';
+import 'package:my_place/widget/mp_button_icon.dart';
 import 'package:my_place/widget/mp_list_tile.dart';
 import 'package:my_place/widget/mp_list_view.dart';
 import 'package:my_place/widget/mp_loading.dart';
@@ -21,15 +22,15 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
       appBar: MPAppBar(
         title: Text('Lista de Produtos'),
         actions: [
-          IconButton(
-            onPressed: () {
+          MPButtonIcon(
+            iconData: Icons.add,
+            onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => FormProdutoPage(null),
                 ),
               );
             },
-            icon: Icon(Icons.add),
           ),
         ],
       ),
