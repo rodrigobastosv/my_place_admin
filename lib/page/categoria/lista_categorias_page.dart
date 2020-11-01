@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:my_place/widget/mp_empty.dart';
 
 import '../../widget/mp_appbar.dart';
 import '../../widget/mp_button_icon.dart';
@@ -34,6 +35,9 @@ class ListaCategoriasPage extends StatelessWidget {
           if (snapshot.hasData) {
             final categorias =
                 _controller.getCategoriasFromDocs(snapshot.data.docs);
+            if (categorias.length == 0 || categorias == null) {
+              return MPEmpty();
+            }
             return MPListView(
               itemCount: categorias.length,
               itemBuilder: (_, i) {
@@ -59,10 +63,10 @@ class ListaCategoriasPage extends StatelessWidget {
                 );
               },
             );
-          } else if (snapshot.hasError) {
-            return Text('Erro');
-          } else {
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
             return MPLoading();
+          } else {
+            return MPEmpty();
           }
         },
       ),

@@ -4,6 +4,7 @@ import 'package:my_place/page/produto/form_produto_page.dart';
 import 'package:my_place/page/produto/lista_produto_controller.dart';
 import 'package:my_place/widget/mp_appbar.dart';
 import 'package:my_place/widget/mp_button_icon.dart';
+import 'package:my_place/widget/mp_empty.dart';
 import 'package:my_place/widget/mp_list_tile.dart';
 import 'package:my_place/widget/mp_list_view.dart';
 import 'package:my_place/widget/mp_loading.dart';
@@ -39,6 +40,9 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
         builder: (_, snapshot) {
           if (snapshot.hasData) {
             final docs = snapshot.data.docs;
+            if (docs.length == 0 || docs == null) {
+              return MPEmpty();
+            }
             final produtos = _controller.getProdutosFromData(docs);
             return MPListView(
               itemCount: produtos.length,
@@ -63,8 +67,10 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
                 );
               },
             );
-          } else {
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
             return MPLoading();
+          } else {
+            return MPEmpty();
           }
         },
       ),
