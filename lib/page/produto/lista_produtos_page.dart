@@ -57,6 +57,10 @@ class _ListaProdutosPageState extends State<ListaProdutosPage> {
                         )
                       : Icon(Icons.fastfood),
                   title: Text(produto.nome),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () async => _controller.removeProduto(produtos[i]),
+                  ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

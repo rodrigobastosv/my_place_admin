@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 
 class MPListTile extends StatelessWidget {
   final Widget leading;
+  final Widget trailing;
   final Widget title;
   final Function onTap;
 
-  const MPListTile({this.leading, this.title, this.onTap});
+  const MPListTile({
+    this.leading,
+    this.title,
+    this.onTap,
+    this.trailing,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +26,7 @@ class MPListTile extends StatelessWidget {
               child: leading,
             ),
       title: title,
-      trailing: Container(
-        width: 16,
-        child: Icon(
-          Icons.chevron_right,
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(.2),
-        ),
-      ),
+      trailing: trailing,
       onTap: onTap,
     );
   }

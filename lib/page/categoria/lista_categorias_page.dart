@@ -53,6 +53,10 @@ class ListaCategoriasPage extends StatelessWidget {
                         : Icon(Icons.category),
                   ),
                   title: Text(categorias[i].nome),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () async => _controller.removeCategoria(categorias[i]),
+                  ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

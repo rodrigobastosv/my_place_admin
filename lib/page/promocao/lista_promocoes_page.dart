@@ -52,6 +52,10 @@ class _ListaPromocoesPageState extends State<ListaPromocoesPage> {
                 return MPListTile(
                   leading: Icon(Icons.campaign),
                   title: Text(promocao.nomeProduto),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () async => _controller.removePromocao(promocao),
+                  ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

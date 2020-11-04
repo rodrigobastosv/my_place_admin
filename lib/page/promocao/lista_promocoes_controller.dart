@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_place/model/promocao_model.dart';
 
 class ListaPromocoesController {
+  CollectionReference promocoesRef =
+      FirebaseFirestore.instance.collection('promocoes');
   final Stream<QuerySnapshot> _promocoesStream =
       FirebaseFirestore.instance.collection('promocoes').snapshots();
 
@@ -15,5 +17,13 @@ class ListaPromocoesController {
         promocaoDoc.data(),
       );
     });
+  }
+
+  Future<void> removePromocao(PromocaoModel promocao) async {
+    try {
+      await promocoesRef.doc(promocao.id).delete();
+    } on Exception {
+      rethrow;
+    }
   }
 }
