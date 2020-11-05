@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:my_place/model/categoria_model.dart';
+import 'package:my_place_models/models/models.dart';
 import 'package:my_place/page/categoria/form_categoria_controller.dart';
 import 'package:my_place/widget/mp_button_icon.dart';
 

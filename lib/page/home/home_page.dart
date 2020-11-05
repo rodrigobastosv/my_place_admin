@@ -5,7 +5,7 @@ import 'package:my_place/page/promocao/lista_promocoes_page.dart';
 import 'package:my_place/widget/mp_logo.dart';
 import 'package:my_place/widget/mp_appbar.dart';
 
-import '../../model/usuario_model.dart';
+import 'package:my_place_models/models/models.dart';
 import '../categoria/lista_categorias_page.dart';
 import '../produto/lista_produtos_page.dart';
 

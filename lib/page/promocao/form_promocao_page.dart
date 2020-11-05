@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:my_place/model/produto_model.dart';
-import 'package:my_place/model/promocao_model.dart';
+import 'package:my_place_models/models/models.dart';
 import 'package:my_place/page/promocao/form_promocao_controller.dart';
 import 'package:my_place/util/preco_utils.dart';
 import 'package:my_place/widget/mp_appbar.dart';

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:my_place/model/usuario_model.dart';
+import 'package:my_place_models/models/models.dart';
 
 import '../../exceptions/exceptions.dart';
 
@@ -27,7 +27,7 @@ class SignInController {
         password: _senha,
       );
       final userFirestore = await _usersRef.doc(userFireAuth.user.uid).get();
-      final user = UsuarioModel.fromJson(userFirestore.data());
+      final user = UsuarioModel.fromJson(userFirestore.id, userFirestore.data());
       if (user.tipo != 'ADMIN') {
         throw AdminInvalidoException();
       }

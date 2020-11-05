@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:my_place/model/promocao_model.dart';
+import 'package:my_place_models/models/models.dart';
 
 class ListaPromocoesController {
   CollectionReference promocoesRef =

@@ -32,6 +32,9 @@ dependencies:
   select_form_field: "^1.0.1"
   flutter_masked_text: ^0.8.0
 
+  my_place_models:
+    path: ../my_place_models
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
