@@ -5,7 +5,7 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_place_models/models/models.dart';
 import 'package:my_place/page/produto/form_produto_controller.dart';
-import 'package:my_place/util/preco_utils.dart';
+import 'package:my_place_utils/my_place_utils.dart';
 import 'package:my_place/widget/mp_button_icon.dart';
 import 'package:my_place/widget/mp_loading.dart';
 import 'package:select_form_field/select_form_field.dart';
@@ -77,6 +77,7 @@ class _FormProdutoPageState extends State<FormProdutoPage> {
                       if (form.validate()) {
                         form.save();
                         await _controller.salvarProduto();
+                        showSuccessToast('Produto foi salvo');
                         Navigator.of(context).pop();
                       }
                     },

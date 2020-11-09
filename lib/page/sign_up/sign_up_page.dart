@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_place/exceptions/exceptions.dart';
 import 'package:my_place/page/sign_up/sign_up_controller.dart';
 import 'package:my_place/widget/mp_loading.dart';
+import 'package:my_place_utils/my_place_utils.dart';
 
 import '../../widget/mp_logo.dart';
 
@@ -100,7 +101,13 @@ class _SignUpPageState extends State<SignUpPage> {
                                   form.save();
                                   await _controller.criaUsuario();
                                   Navigator.of(context).pop();
-                                } on EmailIndisponivelException {} on SenhaFracaException {} on Exception {} finally {
+                                } on EmailIndisponivelException {
+                                  showWarningToast('Este email já está em uso');
+                                } on SenhaFracaException {
+                                  showWarningToast('Senha fraca. Por favor escolha uma senha segura');
+                                } on Exception {
+                                  showErrorToast('Ocorreu um erro inesperado');
+                                } finally {
                                   setState(() {
                                     _controller.setIsLoading(false);
                                   });

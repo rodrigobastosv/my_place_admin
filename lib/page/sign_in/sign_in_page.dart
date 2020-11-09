@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_place/exceptions/exceptions.dart';
 import 'package:my_place/widget/mp_loading.dart';
+import 'package:my_place_utils/my_place_utils.dart';
 
 import '../../widget/mp_logo.dart';
 import '../home/home_page.dart';
@@ -81,7 +82,17 @@ class _SignInPageState extends State<SignInPage> {
                                     ),
                                     (Route<dynamic> route) => false,
                                   );
-                                } on UsuarioNaoEncontradoException {} on SenhaErradaException {} on AdminInvalidoException {} on EmailInvalidoException {} on Exception {} finally {
+                                } on UsuarioNaoEncontradoException {
+                                  showWarningToast('Usuário não encontrado');
+                                } on SenhaErradaException {
+                                  showWarningToast('Senha inválida');
+                                } on AdminInvalidoException {
+                                  showWarningToast('Este usuário não é administrador');
+                                } on EmailInvalidoException {
+                                  showWarningToast('Email inválido');
+                                } on Exception {
+                                  showErrorToast('Ocorreu um erro inesperado');
+                                } finally {
                                   setState(() {
                                     _controller.setIsLoading(false);
                                   });

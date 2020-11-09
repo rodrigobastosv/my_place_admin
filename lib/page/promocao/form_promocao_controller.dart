@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_place_models/models/models.dart';
-import 'package:my_place/util/preco_utils.dart';
+import 'package:my_place_utils/my_place_utils.dart';
 
 class FormPromocaoController {
   FormPromocaoController(this._promocao);

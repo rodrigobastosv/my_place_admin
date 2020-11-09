@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:my_place_models/models/models.dart';
 import 'package:my_place/page/categoria/form_categoria_controller.dart';
 import 'package:my_place/widget/mp_button_icon.dart';
+import 'package:my_place_utils/my_place_utils.dart';
 
 class FormCategoriaPage extends StatefulWidget {
   FormCategoriaPage(this.categoria);
@@ -57,6 +58,7 @@ class _FormCategoriaPageState extends State<FormCategoriaPage> {
                       if (form.validate()) {
                         form.save();
                         await _controller.salvaCategoria();
+                        showSuccessToast('Categoria foi salva');
                       }
                       Navigator.of(context).pop();
                     },
