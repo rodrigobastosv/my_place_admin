@@ -32,6 +32,7 @@ dependencies:
   select_form_field: "^1.0.1"
   flutter_masked_text: ^0.8.0
   oktoast: ^2.3.2
+  intl: ^0.16.1
  
   my_place_models:
     path: ../my_place_models

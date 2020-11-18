@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:my_place/page/pedidos_finalizados/pedidos_finalizados_page.dart';
+import 'package:my_place/page/pedidos_pendentes/pedidos_pendentes_page.dart';
 import 'package:my_place/page/promocao/lista_promocoes_page.dart';
 import 'package:my_place/widget/mp_logo.dart';
 import 'package:my_place/widget/mp_appbar.dart';
@@ -43,6 +45,16 @@ class HomePage extends StatelessWidget {
               iconData: Icons.campaign,
               page: ListaPromocoesPage(),
             ),
+            _Button(
+              text: 'Pedidos Pendentes',
+              iconData: Icons.pending,
+              page: PedidosPendentesPage(),
+            ),
+            _Button(
+              text: 'Pedidos Finalizados',
+              iconData: Icons.flag,
+              page: PedidosFinalizadosPage(),
+            ),
           ],
         ),
       ),
@@ -79,7 +91,7 @@ class _Button extends StatelessWidget {
         },
         child: Container(
           width: 100,
-          height: 80,
+          height: 90,
           padding: const EdgeInsets.all(8),
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -91,9 +103,11 @@ class _Button extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
               ),
               const SizedBox(height: 6),
-              Text(
-                text,
-                style: TextStyle(fontSize: 16),
+              Expanded(
+                child: Text(
+                  text,
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             ],
           ),
