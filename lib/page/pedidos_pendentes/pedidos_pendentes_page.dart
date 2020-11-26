@@ -90,16 +90,19 @@ class PedidosPendentesPage extends StatelessWidget {
   }
 
   List<Widget> getProdutos(List<ProdutoModel> produtos) {
-    return produtos
-        .map(
-          (produto) => ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(produto.urlImagem),
+    if (produtos != null) {
+      return produtos
+          .map(
+            (produto) => ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(produto.urlImagem),
+              ),
+              title: Text(produto.nome),
+              trailing: Text(produto.quantidade.toString()),
             ),
-            title: Text(produto.nome),
-            trailing: Text(produto.quantidade.toString()),
-          ),
-        )
-        .toList();
+          )
+          .toList();
+    }
+    return [];
   }
 }
